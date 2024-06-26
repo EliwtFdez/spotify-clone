@@ -10,74 +10,88 @@ function pruebas(req, res) {
     });
 }
 
-function saveUser(req, res) {
-    var user = new User();
-    var params = req.body;
+function encryptData(data) {
+    const algorithm = 'aes-256-cbc';
+    const key = crypto.randomBytes(32);
+    const iv = crypto.randomBytes(16);
+    let cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
+    let encrypted = cipher.update(data);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex'), key: key.toString('hex') };
+}
+
+async function saveUser(req, res) {
+    const user = new User();
+    const params = req.body;
 
     console.log(params);
 
-    user.name = params.name;
-    user.surname = params.surname;
-    user.email = params.email;
-    user.role = 'ROLE_USER';
-    user.image = 'null';
-    
-    if (params.password) {
-        // Encriptar contraseña
-        bcrypt.hash(params.password, null, null, function(err, hash) {
-            user.password = hash;
-    
-            if (user.name != null && user.surname != null && user.email != null) {
-                // Guardar el usuario   
-                user.save((err, userStored) => {
-                    if (err) {
-                        res.status(500).send({ message: 'Error al guardar el usuario' });
-                    } else {
-                        if (!userStored) {
-                            res.status(500).send({ message: 'Error al guardar el usuario' });
-                        } else {
-                            // Código adicional para manejar el caso exitoso
-                            res.status(200).send({ user: userStored});
+    if (!params.password || !params.name || !params.surname || !params.email) {
+        return res.status(400).send({ message: 'Enter all required fields' });
+    }
 
-                        }
-                    }
-                });
+    const encryptedName = encryptData(params.name);
+    const encryptedSurname = encryptData(params.surname);
+    const encryptedEmail = encryptData(params.email);
+
+    user.name = encryptedName.encryptedData;
+    user.surname = encryptedSurname.encryptedData;
+    user.email = encryptedEmail.encryptedData;
+    user.role = 'ROLE_ADMIN';
+    user.image = 'null';
+
+    if (params.password) {
+        bcrypt.hash(params.password, null, null, async function(err, hash) {
+            if (err) {
+                return res.status(500).send({ message: 'Error encrypting password' });
+            }
+            user.password = hash;
+
+            try {
+                const userStored = await user.save();
+                if (!userStored) {
+                    return res.status(404).send({ message: 'User not registered' });
+                }
+                res.status(200).send({ user: userStored });
+            } catch (error) {
+                res.status(500).send({ message: 'Error saving user' });
             }
         });
+    } else {
+        res.status(400).send({ message: 'Enter password' });
     }
 }
-    
-function loginUser(req, res) {
-    var params = req.body;
 
-    var email = params.email;
-    var password = params.password;
+async function loginUser(req, res) {
+    const params = req.body;
 
-    User.findOne({ email: email.toLowerCase() }, (err, user) => {
-        if (err) {
-            res.status(500).send({ message: 'Error en la petición' });
-        } else {
-            if (!user) {
-                res.status(404).send({ message: 'El usuario no existe' });
-            } else {
-                // Comprobar la contraseña
-                bcrypt.compare(password, user.password, function(err, check) {
-                    // Código adicional para manejar el resultado de la comparación
-                    if(check){
-                        if(params.gethash){
+    const email = params.email;
+    const password = params.password;
 
-                        }else{
-                            res.status(200).send({user});
-                        }
-                    }else{
-                        res.status(404).send({message: 'User could not login'});
-                    }
-                });
-            }
+    try {
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(404).send({ message: 'User does not exist' });
         }
-    });
-}
 
+        bcrypt.compare(password, user.password, function(err, check) {
+            if (err) {
+                return res.status(500).send({ message: 'Error checking password' });
+            }
+            if (check) {
+                if (params.gethash) {
+                    // Add code for token generation here if needed
+                } else {
+                    res.status(200).send({ user });
+                }
+            } else {
+                res.status(400).send({ message: 'Incorrect password' });
+            }
+        });
+    } catch (error) {
+        res.status(500).send({ message: 'Error in request' });
+    }
+}
 
 module.exports = {
     pruebas,
