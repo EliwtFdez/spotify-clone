@@ -11,6 +11,28 @@ async function getArtist(req, res){
     
 }
 
+async function saveArtist(req, res){
+    var artist = new Artist();
+    
+    var params = req.body;  //contiene datos en pares clave/valor enviados desde el cuerpo de la solicitud
+    artist.name = params.name;
+    artist.description = params.description;
+    artist.image = 'null';
+
+    artist.save((err, artistStored) =>{
+        if(err)
+        {
+            res.status(200).send({message: 'Error al guardar artista'});
+        }
+        else
+        {
+            
+        }
+
+    });
+
+}
+
 
 module.exports= {
     getArtist,

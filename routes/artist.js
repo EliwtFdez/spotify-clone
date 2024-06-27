@@ -9,5 +9,4 @@ var md_auth = require('../middleswares/authentication');
 
 api.get('/Artist', md_auth.ensureAuth, ArtistController.getArtist);
 
-
 module.exports = api;
