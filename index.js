@@ -6,7 +6,7 @@ const app = require('./app');
 // Conexión a la base de datos
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb://localhost/Spotify-Clone')
+mongoose.connect('mongodb://localhost:27017/Spotify-Clone')
   .then(() => console.log('Base de datos conectada'))
   .catch(err => console.error(err));
 

@@ -3,11 +3,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/user');
 
-function pruebas(req, res) {
-    res.status(200).send({
-        Message: 'Probando una acción del controlador'
-    });
-}
+function pruebas(req, res) { res.status(200).send({Message:'Probando una acción del controlador'});}
 
 async function saveUser(req, res) {
     const params = req.body;
@@ -48,26 +44,28 @@ async function loginUser(req, res) {
     const password = params.password;
 
     try {
+        console.log(`Buscando usuario con email: ${email.toLowerCase()}`);
         const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
+            console.log('Usuario no encontrado');
             return res.status(404).send({ message: 'User does not exist' });
         }
 
+        console.log('Usuario encontrado:', user);
         bcrypt.compare(password, user.password, function(err, check) {
             if (err) {
                 return res.status(500).send({ message: 'Error checking password' });
             }
             if (check) {
-                if (params.gethash) {
-                    // Add code for token generation here if needed
-                } else {
-                    res.status(200).send({ user });
-                }
+                console.log('Contraseña correcta');
+                res.status(200).send({ user });
             } else {
+                console.log('Contraseña incorrecta');
                 res.status(400).send({ message: 'Incorrect password' });
             }
         });
     } catch (error) {
+        console.log('Error en la solicitud:', error);
         res.status(500).send({ message: 'Error in request' });
     }
 }
