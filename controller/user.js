@@ -59,30 +59,51 @@ async function loginUser(req, res) {
         }
 
         console.log('Usuario encontrado:', user);
-        bcrypt.compare(password, user.password, function (err, check) {
-            if (err) {
-                return res.status(500).send({ message: 'Error checking password' });
-            }
+    
+        bcrypt.compare(password, user.password, function (err, check) { 
             if (check) {
+                // Devolver los datos del usuario logueado
                 if (params.gethash) {
-                    return res.status(200).send({
+                    // Devolver un token de JWT
+                    res.status(200).send({
                         token: jwt.createToken(user)
                     });
                 } else {
-                    return res.status(200).send({ user });
+                    res.status(200).send({ user });
                 }
             } else {
-                return res.status(400).send({ message: 'Incorrect password' });
+                res.status(404).send({ message: 'El usuario no ha podido loguearse' });
             }
         });
+    
     } catch (error) {
         console.log('Error en la solicitud:', error);
         return res.status(500).send({ message: 'Error in request' });
     }
 }
 
+async function updateUser(req, res) {
+    var userId = req.params.id;
+    var update = req.body;
+
+    try {
+        const userUpdated = await User.findByIdAndUpdate(userId, update, { new: true });
+        if (!userUpdated) {
+            return res.status(404).send({ message: 'Unable to update user' });
+        }
+        return res.status(200).send({ user: userUpdated });
+    } catch (err) {
+        return res.status(500).send({ message: 'Error updating the user' });
+    }
+}
+
+async function uploadImages(req, res){
+    
+}
+
 module.exports = {
     pruebas,
     saveUser,
-    loginUser
+    loginUser,
+    updateUser
 };
