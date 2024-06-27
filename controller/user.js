@@ -2,11 +2,10 @@
 
 const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/user');
-var jwt = require('../services/jwt')
+var jwt = require('../services/jwt');
+const { request } = require('express');
 
-function pruebas(req, res) {
-    res.status(200).send({ message: 'Probando una acción del controlador' });
-}
+function pruebas(req, res) { res.status(200).send({ message: 'Probando una acción del controlador' });}
 
 async function saveUser(req, res) {
     const params = req.body;
@@ -97,13 +96,26 @@ async function updateUser(req, res) {
     }
 }
 
-async function uploadImages(req, res){
+async function uploadImage(req, res){
+    var userId = req.params.id;
+    var file_name = 'No image ...';
     
+    if (req.files) 
+    {
+       var files_path = req.files.images.path;
+        
+       console.log(files_path);
+    } 
+    else 
+    {
+        res.status(200).send({message: 'You have no uploaded an image'})
+    }
 }
 
 module.exports = {
     pruebas,
     saveUser,
     loginUser,
-    updateUser
+    updateUser,
+    uploadImage
 };
