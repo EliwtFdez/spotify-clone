@@ -1,4 +1,4 @@
-'úse strict'
+'úse strict';
 
 var express = require ('express');
 var UserController = require('../controller/user');
