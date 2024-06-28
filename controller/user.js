@@ -9,7 +9,6 @@ const user = require('../models/user');
 const fs = require('fs');
 const path = require('path'); 
 
-
 function pruebas(req, res) { res.status(200).send({ message: 'Probando una acción del controlador' });}
 
 function saveUser(req, res) {
@@ -166,7 +165,6 @@ async function uploadImage(req, res)
 
     }
 }
-
 
 function getImageFile(req, res) 
 {

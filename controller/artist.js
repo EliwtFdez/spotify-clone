@@ -10,31 +10,31 @@ async function getArtist(req, res){
     res.status(200).send({message: 'Metodo getArtist del controller Artist.js'});
     
 }
-
-async function saveArtist(req, res){
+function saveArtist(req, res) {
     var artist = new Artist();
     
-    var params = req.body;  //contiene datos en pares clave/valor enviados desde el cuerpo de la solicitud
+    var params = req.body;  // contiene datos en pares clave/valor enviados desde el cuerpo de la solicitud
     artist.name = params.name;
     artist.description = params.description;
     artist.image = 'null';
 
-    artist.save((err, artistStored) =>{
-        if(err)
+    artist.save()
+        .then(artistStored => {
+            if (!artistStored) 
+            {
+                return res.status(404).send({ message: 'The artist has not been saved' });
+            }
+            res.status(200).send({ artist: artistStored });
+        })
+        .catch(err => 
         {
-            res.status(200).send({message: 'Error al guardar artista'});
-        }
-        else
-        {
-            
-        }
-
-    });
-
+            res.status(500).send({ message: 'Error saving artist', error: err });
+        });
 }
 
 
 module.exports= {
     getArtist,
-
+    saveArtist,
+    
 }
