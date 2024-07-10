@@ -2,36 +2,68 @@
 
 var path = require('path');
 var fs = require('fs');
+const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
+
+
 var Artist = require('../models/artist');
 var Album = require('../models/album');
 var Song = require('../models/song');
-const artist = require('../models/artist');
 
-async function getArtist(req, res)
-{
-    var artistId = req.params.id;   
+function getArtist(req, res) {
+    var artistId = req.params.id;
 
-    Artist.findById(artistId (err, artist) =>
-    {
-        if(err)
-        {
-            res.status(200).send({message: 'Error peticion'});
-
-        }
-        else{
-            if (!artist) 
-            {
-                
+    Artist.findById(artistId).exec()
+        .then(artist => {
+            if (!artist) {
+                res.status(404).send({ message: 'El artista no existe' });
+            } else {
+                res.status(200).send({ artist });
             }
+        })
+        .catch(err => {
+            res.status(500).send({ message: 'Error en la petición' });
+        });
+}
+
+async function getArtists(req, res) {
+    try {
+        var page = req.params.page ? parseInt(req.params.page) : 1;
+        var itemsPerPage = 4;
+
+        const artists = await Artist.find()
+            .sort('name')
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage);
+
+        if (!artists || artists.length === 0) {
+            return res.status(404).send({ message: 'No hay artistas' });
         }
 
+        const count = await Artist.countDocuments();
+        return res.status(200).send({
+            pages: Math.ceil(count / itemsPerPage),
+            artists: artists
+        });
+    } catch (err) {
+        return res.status(500).send({ message: 'Error en la petición' });
+    }
+}
 
-        
+function updateArtist(req, res) {
+    var artistId = req.params.id;
+    var update = req.body;
 
-    });
-
-    res.status(200).send({message: 'Metodo getArtist del controller Artist.js'});
-    
+    Artist.findByIdAndUpdate(artistId, update, { new: true }).exec()
+        .then(artistUpdated => {
+            if (!artistUpdated) {
+                return res.status(404).send({ message: 'El artista no se ha podido actualizar' });
+            }
+            res.status(200).send({ artist: artistUpdated });
+        })
+        .catch(err => {
+            res.status(500).send({ message: 'Error al actualizar el artista', error: err });
+        });
 }
 
 function saveArtist(req, res) {
@@ -56,9 +88,94 @@ function saveArtist(req, res) {
         });
 }
 
+function deleteArtist(req, res) {
+    var artistId = req.params.id;
 
-module.exports= {
+    Artist.findByIdAndDelete(artistId).then(artistRemoved => {
+        if (!artistRemoved) {
+            return res.status(404).send({ message: 'El artista no se ha eliminado' });
+        }
+
+        // Eliminar los álbumes asociados al artista
+        Album.deleteMany({ artist: artistId }).then(albumsRemoved => {
+            if (albumsRemoved.deletedCount === 0) {
+                return res.status(404).send({ message: 'No se encontraron álbumes para eliminar' });
+            }
+
+            // Eliminar las canciones asociadas a los álbumes
+            Song.deleteMany({ album: { $in: albumsRemoved.map(album => album._id) } }).then(songsRemoved => {
+                if (songsRemoved.deletedCount === 0) {
+                    return res.status(404).send({ message: 'No se encontraron canciones para eliminar' });
+                }
+
+                return res.status(200).send({ message: 'Artista, álbumes y canciones eliminados exitosamente', artist: artistRemoved });
+            }).catch(err => {
+                return res.status(500).send({ message: 'Error al eliminar las canciones', error: err });
+            });
+        }).catch(err => {
+            return res.status(500).send({ message: 'Error al eliminar los álbumes', error: err });
+        });
+    }).catch(err => {
+        return res.status(500).send({ message: 'Error al eliminar el artista', error: err });
+    });
+}
+
+function uploadImage(req, res){
+    var artistId = req.params.id;
+    var file_name = 'No recibido..';
+   
+    if (req.files) 
+        {
+            var files_path = req.files.images.path;
+            var file_split = files_path.split('\\');
+            file_name = file_split[2];
+    
+            var ext_split = file_name.split('\.');
+            var file_ext = ext_split[1];
+    
+            console.log(artist, file_split);    
+    
+            if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'gif') 
+            {
+                Artist.findByIdAndUpdate(artistId, { image: file_name }, { new: true })
+                    .then(artistUpdated => 
+                    {
+                        if (!artistUpdated) 
+                        {
+                            res.status(404).send({ message: 'Unable to update user' });
+    
+                        } 
+                        else 
+                        {
+                            res.status(200).send({ artists: artistUpdated });
+    
+                        }
+                    })
+                    .catch(err => 
+                    {
+                        res.status(500).send({ message: 'Error updating user', error: err });
+    
+                    });
+            } 
+            else 
+            {
+                res.status(400).send({ message: 'Invalid extension' });
+    
+            }
+        } 
+        else 
+        {
+            res.status(400).send({ message: 'You have not uploaded an image' });
+    
+        }
+    }
+
+
+module.exports = {
     getArtist,
     saveArtist,
-    
-}
+    getArtists,
+    updateArtist,
+    deleteArtist,
+    uploadImage
+};
