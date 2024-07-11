@@ -120,56 +120,52 @@ function deleteArtist(req, res) {
     });
 }
 
-function uploadImage(req, res){
+function uploadImage(req, res) {
     var artistId = req.params.id;
     var file_name = 'No recibido..';
-   
-    if (req.files) 
-        {
-            var files_path = req.files.images.path;
-            var file_split = files_path.split('\\');
-            file_name = file_split[2];
-    
-            var ext_split = file_name.split('\.');
-            var file_ext = ext_split[1];
-    
-            console.log(artist, file_split);    
-    
-            if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'gif') 
-            {
-                Artist.findByIdAndUpdate(artistId, { image: file_name }, { new: true })
-                    .then(artistUpdated => 
-                    {
-                        if (!artistUpdated) 
-                        {
-                            res.status(404).send({ message: 'Unable to update user' });
-    
-                        } 
-                        else 
-                        {
-                            res.status(200).send({ artists: artistUpdated });
-    
-                        }
-                    })
-                    .catch(err => 
-                    {
-                        res.status(500).send({ message: 'Error updating user', error: err });
-    
-                    });
-            } 
-            else 
-            {
-                res.status(400).send({ message: 'Invalid extension' });
-    
-            }
-        } 
-        else 
-        {
-            res.status(400).send({ message: 'You have not uploaded an image' });
-    
-        }
-    }
 
+    if (req.files && req.files.image) {
+        var file_path = req.files.image.path;
+        var file_split = file_path.split('\\'); // Use '\\' for Windows path
+        file_name = file_split[file_split.length - 1];
+
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[ext_split.length - 1];
+
+        console.log(file_name, file_split);
+
+        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'gif') {
+            Artist.findByIdAndUpdate(artistId, { image: file_name }, { new: true })
+                .then(artistUpdated => {
+                    if (!artistUpdated) {
+                        return res.status(404).send({ message: 'Unable to update artist' });
+                    } else {
+                        return res.status(200).send({ artist: artistUpdated });
+                    }
+                })
+                .catch(err => {
+                    return res.status(500).send({ message: 'Error updating artist', error: err });
+                });
+        } else {
+            return res.status(400).send({ message: 'Invalid file extension' });
+        }
+    } else {
+        return res.status(400).send({ message: 'No image uploaded' });
+    }
+}
+
+function getImageFile(req, res) {
+    var imageFile = req.params.imageFile;
+    var path_file = './uploads/artists/' + imageFile;
+
+    fs.exists(path_file, function(exist) {
+        if (exist) {
+            res.sendFile(path.resolve(path_file));
+        } else {
+            res.status(200).send({ message: 'Image does not exist' });
+        }
+    });
+}
 
 module.exports = {
     getArtist,
@@ -177,5 +173,6 @@ module.exports = {
     getArtists,
     updateArtist,
     deleteArtist,
-    uploadImage
+    uploadImage,
+    getImageFile
 };

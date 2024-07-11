@@ -19,7 +19,9 @@ api.put('/Artist/:id', md_auth.ensureAuth, ArtistController.updateArtist);
 api.post('/Artist', md_auth.ensureAuth, ArtistController.saveArtist);
 
 api.delete('/Artist/:id', md_auth.ensureAuth, ArtistController.deleteArtist);
+
 api.post('/Upload-images-Artist/:id', [md_auth.ensureAuth, md_upload], ArtistController.uploadImage);
+api.get('/Get-Image-Artist/:imageFile', ArtistController.getImageFile);
 
 
 
