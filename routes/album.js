@@ -20,4 +20,5 @@ api.post('/Upload-Image-Album/:id', [md_auth.ensureAuth, md_upload], AlbumContro
 api.get('/Get-Image-Album/:imageFile', AlbumController.getImageFile);
 
 
+
 module.exports = api;
