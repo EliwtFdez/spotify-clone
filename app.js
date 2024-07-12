@@ -7,6 +7,10 @@ var app = express();
 var use_routes = require('./routes/user');
 var artist_routes = require('./routes/artist');
 var album_routes = require('./routes/album');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 09fce31e5650d923d825d8d95e26900cd888e0a3
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -18,9 +22,14 @@ app.use((req, res, next) => {
     res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
+
 //Rutas
 app.use('/api', use_routes);
 app.use('/api', artist_routes);
 app.use('/api', album_routes);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 09fce31e5650d923d825d8d95e26900cd888e0a3
 
 module.exports = app;
