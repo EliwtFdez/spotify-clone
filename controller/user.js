@@ -9,13 +9,13 @@ const user = require('../models/user');
 const fs = require('fs');
 const path = require('path'); 
 
-
 function pruebas(req, res) { res.status(200).send({ message: 'Probando una acción del controlador' });}
 
 function saveUser(req, res) {
     const params = req.body;
 
-    if (!params.password || !params.name || !params.surname || !params.email) {
+    if (!params.password || !params.name || !params.surname || !params.email) 
+    {
         return res.status(400).send({ message: 'Enter all required fields' });
     }
 
@@ -25,24 +25,33 @@ function saveUser(req, res) {
         email: params.email.toLowerCase(),
         role: 'ROLE_USER',
         image: 'null'
-    });
+        }
+    );
 
-    bcrypt.hash(params.password, null, null, (err, hash) => {
-        if (err) {
+    bcrypt.hash(params.password, null, null, (err, hash) => 
+    {
+        if (err) 
+        {
             return res.status(500).send({ message: 'Error encrypting password' });
         }
         user.password = hash;
 
         user.save()
-            .then(userStored => {
-                if (!userStored) {
+            .then(userStored => 
+            {
+                if (!userStored) 
+                {
                     return res.status(404).send({ message: 'User not registered' });
+                
                 }
                 res.status(200).send({ user: userStored });
+
             })
-            .catch(error => {
+            .catch(error => 
+            {
                 res.status(500).send({ message: 'Error saving user', error });
-            });
+            }
+        );
     });
 }
 function loginUser(req, res) {
@@ -90,22 +99,29 @@ function updateUser(req, res) { // se agrego los .then y .catch como lo indican 
     var update = req.body;
 
     User.findByIdAndUpdate(userId, update, { new: true })
-        .then(userUpdated => {
-            if (!userUpdated) {
+        .then(userUpdated => 
+        {
+            if (!userUpdated) 
+            {
                 return res.status(404).send({ message: 'Unable to update user' });
+
             }
             return res.status(200).send({ user: userUpdated });
+
         })
-        .catch(err => {
+        .catch(err => 
+        {
             return res.status(500).send({ message: 'Error updating the user', error: err });
         });
 }
 
-async function uploadImage(req, res) {
+async function uploadImage(req, res) 
+{
     var userId = req.params.id;
     var file_name = 'No image ...';
     
-    if (req.files) {
+    if (req.files) 
+    {
         var files_path = req.files.images.path;
         var file_split = files_path.split('\\');
         file_name = file_split[2];
@@ -115,40 +131,55 @@ async function uploadImage(req, res) {
 
         console.log(user, file_split);    
 
-        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'gif') {
+        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'gif') 
+        {
             User.findByIdAndUpdate(userId, { image: file_name }, { new: true })
-                .then(userUpdated => {
-                    if (!userUpdated) {
+                .then(userUpdated => 
+                {
+                    if (!userUpdated) 
+                    {
                         res.status(404).send({ message: 'Unable to update user' });
 
-                    } else {
+                    } 
+                    else 
+                    {
                         res.status(200).send({ user: userUpdated });
 
                     }
                 })
-                .catch(err => {
+                .catch(err => 
+                {
                     res.status(500).send({ message: 'Error updating user', error: err });
 
                 });
-        } else {
+        } 
+        else 
+        {
             res.status(400).send({ message: 'Invalid extension' });
 
         }
-    } else {
+    } 
+    else 
+    {
         res.status(400).send({ message: 'You have not uploaded an image' });
 
     }
 }
 
-
-function getImageFile(req, res) {
+function getImageFile(req, res) 
+{
     var imageFile = req.params.imageFile;
     var path_file = './uploads/users/' + imageFile;
 
-    fs.exists(path_file, function(exist) {
-        if (exist) {
+    fs.exists(path_file, function(exist) 
+    {
+        if (exist) 
+        {
             res.sendFile(path.resolve(path_file));
-        } else {
+
+        } 
+        else
+        {
             res.status(200).send({ message: 'Image does not exist' });
         }
     });
