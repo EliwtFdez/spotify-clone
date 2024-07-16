@@ -7,7 +7,8 @@ var api = express.Router();
 var md_auth = require('../middleswares/authentication');    
 
 var multipart = require('connect-multiparty');
-var md_upload = multipart({ uploadDir: './uploads/song' });
+const song = require('../models/song');
+var md_upload = multipart({ uploadDir: './uploads/songs' });
 
 // Rutas para manejar canciones
 api.get('/Song/:id', md_auth.ensureAuth, SongController.getSong);// obtiene las canciones
@@ -16,6 +17,8 @@ api.get('/Songs/:album?', md_auth.ensureAuth, SongController.getSongs); // Nueva
 api.put('/Song/:id', md_auth.ensureAuth, SongController.updateSong); // Nueva ruta para actualizar la canción
 api.delete('/song/:id', md_auth.ensureAuth, SongController.deleteSong); // Nueva ruta para eliminar la canción
 
+api.post('/upload-file-song/:id', [md_auth.ensureAuth, md_upload], SongController.uploadFile); // Ruta para subir archivo de la canción
+api.get('/get-file-song/:songFile', SongController.getSongFile); // Ruta para obtener archivo de la canción
 
 
 // Exportar el módulo de rutas

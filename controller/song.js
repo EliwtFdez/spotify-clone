@@ -124,11 +124,79 @@ async function deleteSong(req, res) {
     }
 }
 
+// Función para subir un archivo a una canción
+async function uploadFile(req, res) 
+{
+    var songId = req.params.id;
+    var file_name = 'No update ...';
+    
+    if (req.files) 
+    {
+        var files_path = req.files.file.path;
+        var file_split = files_path.split('\\');
+        file_name = file_split[2];
+
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[1];
+
+        console.log(Song, file_split);    
+
+        if (file_ext === 'mp3' || file_ext === 'obb' || file_ext === 'opus') 
+        {
+            Song.findByIdAndUpdate(songId, { file: file_name }, { new: true })
+                .then(songUpdated => 
+                {
+                    if (!songUpdated) 
+                    {
+                        res.status(404).send({ message: 'Unable to update song' });
+
+                    } 
+                    else 
+                    {
+                        res.status(200).send({ song: songUpdated });
+
+                    }
+                })
+                .catch(err => 
+                {
+                    res.status(500).send({ message: 'Error updating song', error: err });
+
+                });
+        } 
+        else 
+        {
+            res.status(400).send({ message: 'Invalid extension .. ' });
+
+        }
+    } 
+    else 
+    {
+        res.status(400).send({ message: 'You have not uploaded an file' });
+
+    }
+}
+
+// Función para obtener un archivo de canción
+function getSongFile(req, res) {
+    var songFile = req.params.songFile;
+    var path_file = './uploads/songs/' + songFile;
+    fs.exists(path_file, (exists) => {
+        if (exists) {
+            res.sendFile(path.resolve(path_file));
+        } else {
+            res.status(404).send({ message: 'No existe el archivo de audio...' });
+        }
+    });
+}
+
+
 module.exports = {
     getSongs,
     saveSong,
     getSong,
     updateSong,
-    deleteSong
+    deleteSong,
+    uploadFile,
+    getSongFile
 
 };
