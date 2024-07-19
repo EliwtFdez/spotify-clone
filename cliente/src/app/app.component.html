@@ -14,7 +14,7 @@
       <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
       Buscar
     </a>
-    <a href="#">
+    <a [routerLink]="['/Artist',1]" [routerLinkActive]="['actived']">
       <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
       Artistas
     </a>
@@ -31,10 +31,9 @@
     </div>
 
     <span id="identity_name">{{identity.name}}</span>
-
-    <a routerLink="[/misDatos]">
-      <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-      Mis Datos
+    
+    <a [routerLink]="['/misDatos']" routerLinkActive="active" class="active">
+      <span aria-hidden="true" class="glyphicon glyphicon-cog"></span> Mis Datos
     </a>
 
     <a (click)="logout()" class="btn-logout">

@@ -9,7 +9,12 @@ html, body {
     background-color: #cecece; 
 
         font-family: 'Helvetica Neue', Arial, sans-serif;
-  }
+}
+
+.actived{
+    border-bottom: 5px  solid #c12525a4;
+    padding-bottom: 5px;
+}
 
 .navigation {
     text-align: center;
