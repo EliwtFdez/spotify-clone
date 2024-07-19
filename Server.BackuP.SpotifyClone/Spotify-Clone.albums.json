@@ -1,0 +1,91 @@
+[{
+  "_id": {
+    "$oid": "66908b6501e6cc0166109212"
+  },
+  "title": "Countdown to Extinction",
+  "description": "Es el quinto álbum de estudio de la banda estadounidense de thrash metal Megadeth",
+  "year": 1992,
+  "image": "null",
+  "artist": {
+    "$oid": "667e006884843cbf5f830fa3"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66908ccf01e6cc0166109214"
+  },
+  "title": "Gaia II",
+  "description": "Álbum de estudio de Mago de Oz lanzado en 2005",
+  "year": 2005,
+  "image": "null",
+  "artist": {
+    "$oid": "667e003384843cbf5f830f9d"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66908d2e01e6cc0166109216"
+  },
+  "title": "The Number of the Beast",
+  "description": "Álbum de estudio de Iron Maiden ",
+  "year": 1982,
+  "image": "null",
+  "artist": {
+    "$oid": "667e004784843cbf5f830f9f"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66908d5001e6cc0166109218"
+  },
+  "title": "Master of Puppets",
+  "description": "Álbum de estudio de Metallica",
+  "year": 1986,
+  "image": "null",
+  "artist": {
+    "$oid": "667e005784843cbf5f830fa1"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66909470e1884be026a43691"
+  },
+  "title": "ROLAS MAMALONAS MIX",
+  "description": "ULTRAMEGA GOOD VOL.2",
+  "year": 2000002,
+  "image": "d42WX4bdnoKy-vb0AwIhzO4m.png",
+  "artist": {
+    "$oid": "669061c7859ce891d7258165"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66909e9a9183739004cb3039"
+  },
+  "title": "Rolas mamamlonas",
+  "description": "ULTRAMEGA GOOD vol 1",
+  "year": 2000002,
+  "image": "null",
+  "artist": {
+    "$oid": "669061c7859ce891d7258165"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6690bc13db5e6e48f5fafaee"
+  },
+  "title": "Rolas mamamlonas333232",
+  "description": "ULTRAMEGA GOOD vol 1",
+  "year": 2000002,
+  "image": "null",
+  "artist": {
+    "$oid": "669061c7859ce891d7258165"
+  },
+  "__v": 0
+}]

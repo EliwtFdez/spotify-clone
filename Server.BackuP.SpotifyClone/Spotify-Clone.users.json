@@ -1,0 +1,132 @@
+[{
+  "_id": {
+    "$oid": "667ca8e4489bd27c97bb2834"
+  },
+  "name": "Oswaldo",
+  "surname": "Cheko",
+  "email": "ows@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$LvHOE3GRMKm4rDqYI2fnn.Tqk7JmCUBTs/1jPxvPxdHtas6V1tneS",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667ca9ed732f98d4b799f707"
+  },
+  "name": "Cheko",
+  "surname": "Peres",
+  "email": "chekp@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$l7DMQ0IRp/PGrfN5S/3R5uitqow5nFFMIQ9uNeCoVyBGzoEQoiGsa",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667caa2a732f98d4b799f709"
+  },
+  "name": "Carlos",
+  "surname": "Vernaphen",
+  "email": "vcarlos@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$yEQ6dDRCg1asfht5vwwruujbKP/YZIOrfvggLPV1A1tjPpc6dg/G.",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667caa52a063baa6507c67c0"
+  },
+  "name": "AdminEliwt",
+  "surname": "AdminRoot",
+  "email": "a.admin@gmail.com",
+  "role": "ROLE_ADMIN",
+  "image": "null",
+  "password": "$2a$10$MO1RJkdO37Vko3u/xjyH5.15o9MYGdKMtfdQlg2ZKTfX1Niu2EDmu",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667cc91b7efdcd0b8e07c258"
+  },
+  "name": "Eliwt",
+  "surname": "Fdez",
+  "email": "a.fdez@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$IE.SYi1/Sk75v4ZwEeiENOEbDnSMTIVBXqGeuVO9Mw.7QACMnD44i",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667ce7e35498f244565ea756"
+  },
+  "name": "shadow",
+  "surname": "kadizz",
+  "email": "shadowkadizz@gmail.com",
+  "role": "ROLE_USER",
+  "image": "TBWw_RFNjstgrNPYb5DJyahJ.png",
+  "password": "$2a$10$rNasLCs6GIb0eSZ9adH4OeWfjnhKSDxJymFfCC3SK/Rd0/woYsP8.",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667deeaae544d33fc8dd08ad"
+  },
+  "name": "Prueba2",
+  "surname": "Prueba2",
+  "email": "prueba@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$v0tReQutY/vBAwYGiuBxD.Ry1nMnjNDb7RquYAndgsu2uBFY5mBVO",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669881fc2e56840ba380e0ef"
+  },
+  "name": "admin33",
+  "surname": "Admin",
+  "email": "admin@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$sMJPFKauyB7K.bSZWmRWUughteRQvJJsj3sc6Wso9vmBL7lLY2dKC",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669996e1f10da3b9b4b82681"
+  },
+  "name": "Eliwt",
+  "surname": "Fernandez",
+  "email": "shadowkland@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$ComP/z1Elktxr7Y4Mab6j.Z0NDkuS2SH7tV66900tRmBiAXkR9j9.",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669997d9f10da3b9b4b82683"
+  },
+  "name": "PruebaAngular",
+  "surname": "Angular",
+  "email": "angular@angular.es",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$RLmNwcPOX1LC.Kp9Zay01u6gayAC1KhZdxqxSkdsRwranJGwPml6u",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6699ce27de5fc52b61ef06ea"
+  },
+  "name": "PruebaAngular",
+  "surname": "angular",
+  "email": "angular@gmail.com",
+  "role": "ROLE_USER",
+  "image": "null",
+  "password": "$2a$10$5QhBoaX2mWFQvQGbkOdXsewAqyw8Cc96tWBPUupUIkA5cHrxbX64i",
+  "__v": 0
+}]

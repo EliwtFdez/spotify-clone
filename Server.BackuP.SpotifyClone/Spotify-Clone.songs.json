@@ -1,0 +1,39 @@
+[{
+  "_id": {
+    "$oid": "6695bdcf2952eff382aaa635"
+  },
+  "number": 1,
+  "name": "Beso de 3",
+  "duration": "3:40",
+  "file": "6kNiBu041Eth6zL82HAe_iYd.opus",
+  "album": {
+    "$oid": "6690bc13db5e6e48f5fafaee"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6695bdf9d7e3a16b6c6cb963"
+  },
+  "number": 2,
+  "name": "Chupon",
+  "duration": "3:40",
+  "file": "ADj2_DhihvMAiVJZp68owgd9.opus",
+  "album": {
+    "$oid": "6690bc13db5e6e48f5fafaee"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6695cecd751d6471e05bd2b0"
+  },
+  "number": 3,
+  "name": "Martillazo",
+  "duration": "3:40",
+  "file": "xnyU8sKu40Jh8yf99d47Rrv5.opus",
+  "album": {
+    "$oid": "6690bc13db5e6e48f5fafaee"
+  },
+  "__v": 0
+}]

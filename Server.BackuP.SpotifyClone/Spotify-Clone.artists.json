@@ -1,0 +1,63 @@
+[{
+  "_id": {
+    "$oid": "667e003384843cbf5f830f9d"
+  },
+  "name": "Mago De Oz",
+  "description": "Folk Metal",
+  "image": "null",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667e004784843cbf5f830f9f"
+  },
+  "name": "Iron Maiden",
+  "description": "Heavy Metal",
+  "image": "null",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667e005784843cbf5f830fa1"
+  },
+  "name": "Metallica",
+  "description": "Thrash Metal",
+  "image": "null",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667e006884843cbf5f830fa3"
+  },
+  "name": "Megadeth",
+  "description": "Thrash Metal",
+  "image": "null",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668f021b8958c4500d2fc37e"
+  },
+  "name": "Guns And Rouses",
+  "description": "Metal",
+  "image": "null",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "669061c7859ce891d7258165"
+  },
+  "name": "Pruebas2",
+  "description": "TrapCholoMalandro",
+  "image": "nenIMu8Ve6rs5PRHyXm-h-aa.png",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6690bc4ddb5e6e48f5fafaf2"
+  },
+  "name": "PruebaNombre",
+  "description": "PruebaDescription",
+  "image": "null",
+  "__v": 0
+}]
