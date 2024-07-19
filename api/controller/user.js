@@ -115,54 +115,56 @@ async function updateUser(req, res) {
     }
   }  
 
-async function uploadImage(req, res) 
-{
+  async function updateUser(req, res) {
+    const userId = req.params.id;
+    const update = req.body;
+  
+    if (userId != req.user.sub) {
+      return res.status(403).send({ message: 'No tienes permiso' });
+    }
+  
+    try {
+      const userUpdated = await User.findByIdAndUpdate(userId, update, { new: true });
+      if (!userUpdated) {
+        return res.status(404).send({ message: 'No se ha podido actualizar el usuario' });
+      }
+      return res.status(200).send({ user: userUpdated });
+    } catch (err) {
+      return res.status(500).send({ message: 'Error al actualizar el usuario', error: err });
+    }
+  }  
+
+  async function uploadImage(req, res) {
     var userId = req.params.id;
     var file_name = 'No image ...';
-    
-    if (req.files) 
-    {
-        var files_path = req.files.images.path;
-        var file_split = files_path.split('\\');
-        file_name = file_split[2];
+
+    if (req.files && req.files.image) {  // Usa 'image' aquí
+        var file_path = req.files.image.path;
+        var file_split = file_path.split('\\');
+        file_name = file_split[file_split.length - 1];
 
         var ext_split = file_name.split('\.');
-        var file_ext = ext_split[1];
+        var file_ext = ext_split[ext_split.length - 1];
 
-        console.log(user, file_split);    
+        console.log('user', file_split);
 
-        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'gif') 
-        {
-            User.findByIdAndUpdate(userId, { image: file_name }, { new: true })
-                .then(userUpdated => 
-                {
-                    if (!userUpdated) 
-                    {
-                        res.status(404).send({ message: 'Unable to update user' });
-
-                    } 
-                    else 
-                    {
-                        res.status(200).send({ user: userUpdated });
-
-                    }
-                })
-                .catch(err => 
-                {
-                    res.status(500).send({ message: 'Error updating user', error: err });
-
-                });
-        } 
-        else 
-        {
+        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'gif') {
+            try {
+                // Save the file name in the database
+                const userUpdated = await User.findByIdAndUpdate(userId, { image: file_name }, { new: true });
+                if (!userUpdated) {
+                    res.status(404).send({ message: 'Unable to update user' });
+                } else {
+                    res.status(200).send({ user: userUpdated });
+                }
+            } catch (err) {
+                res.status(500).send({ message: 'Error updating user', error: err });
+            }
+        } else {
             res.status(400).send({ message: 'Invalid extension' });
-
         }
-    } 
-    else 
-    {
+    } else {
         res.status(400).send({ message: 'You have not uploaded an image' });
-
     }
 }
 

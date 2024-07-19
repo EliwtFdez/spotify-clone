@@ -23,11 +23,11 @@
     </p>
 
     <div class="image_for_edit" *ngIf="user.image && user.image != null">
-      <img src="" alt=""/>
+      <img src="{{url +'Upload-images-user/'+user.image}}" alt=""/>
     </div>
     <p>
-      <label for="">Sube tu foto</label>
-      <input type="file" placeholder="Subir image..."/>
+      <label for="">Sube tu foto: </label>
+      <input type="file" placeholder="Subir image..." (change)="fileChangeEvent($event)"/>
     </p>
 
     <input type="submit" value="Actualizar Datos" class="btn btn-primary"/>

@@ -53,22 +53,24 @@ export class UserService {
     return this.http.put(`${this.apiUrl}/UpdateUser/${user._id}`, user, { headers });
   }
 
-getIdentity() {
-  const identity = JSON.parse(localStorage.getItem('identity') || '{}');
-  return identity !== 'undefined' ? identity : null;
-}
-
-
-  getToken(){
-    let token = JSON.stringify(localStorage.getItem('token'));
-    if (token != "undefined") {
-        this.token = token
-
+  getIdentity() {
+    let identity = JSON.parse(localStorage.getItem('identity') || '{}');
+    if (identity != "undefined") {
+      this.identity = identity;
     } else {
-        this.token = null;
+      this.identity = null;
     }
-      return this.token;
+    return this.identity;
+  }
 
+  getToken() {
+    let token = localStorage.getItem('token');
+    if (token != "undefined") {
+      this.token = token;
+    } else {
+      this.token = null;
+    }
+    return this.token;
   }
 
 }
