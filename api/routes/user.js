@@ -12,8 +12,8 @@ var api = express.Router();
 
 
 api.get('/DevController', md_auth.ensureAuth, UserController.pruebas);
-api.get('/Login', UserController.loginUser);
-api.get('/Register', UserController.saveUser);
+api.post('/Login', UserController.loginUser);
+api.post('/Register', UserController.saveUser);
 api.put('/UpdateUser/:id',md_auth.ensureAuth, UserController.updateUser)
 api.post('/Upload-images-user/:id', [md_auth.ensureAuth, md_upload] , UserController.uploadImage);
 api.get('/Get-image-file/:imageFile', UserController.getImageFile);

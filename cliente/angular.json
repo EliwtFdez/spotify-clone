@@ -3,11 +3,17 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "client": {
+    "cliente": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
         }
       },
       "root": "",
@@ -17,24 +23,24 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/client",
+            "outputPath": "dist/cliente",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss", "src/assets/css/styless.css"
+            "styles": [ "src/styles.css", "src/assets/css/stylesall.css"
             ],
-            "scripts": []
+            "scripts": [
+     
+            ]
           },
           "configurations": {
             "production": {
@@ -64,10 +70,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "client:build:production"
+              "buildTarget": "cliente:build:production"
             },
             "development": {
-              "buildTarget": "client:build:development"
+              "buildTarget": "cliente:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +89,6 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -91,15 +96,15 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+            ]
           }
         }
       }
     }
   },
   "cli": {
-    "analytics": "5fcad82e-350f-4b86-aa77-f2acb07d8502"
+    "analytics": false
   }
 }

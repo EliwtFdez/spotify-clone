@@ -27,4 +27,5 @@ mongoose.connection.on('disconnected', () => {
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Servidor ejecutándose en el puerto ${port}`);
+  console.log(dbURI);
 });
