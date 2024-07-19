@@ -43,21 +43,8 @@ export class UserService {
     
   }
 
- /*
-  updateUser(user_to_update: any): Observable<any> {
-    const json = JSON.stringify(user_to_update);
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json', 
-      'Authorization': this.getToken()
-    });
-  
-    // Construir la URL sin el carácter ':'
-    return this._http.put<any>(`${this.url}/UpdateUser/${user_to_update._id}`, json, { headers: headers })
-      .pipe(map(res => res));
-  }
-*/
   updateUser(user: User): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // Obtener el token de localStorage
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -65,18 +52,12 @@ export class UserService {
 
     return this.http.put(`${this.apiUrl}/UpdateUser/${user._id}`, user, { headers });
   }
-  
 
-  getIdentity(){
-    let identity = JSON.stringify(localStorage.getItem('indentity'));
-    if (identity != "undefined") {
-        this.identity = identity
+getIdentity() {
+  const identity = JSON.parse(localStorage.getItem('identity') || '{}');
+  return identity !== 'undefined' ? identity : null;
+}
 
-    } else {
-        this.identity = null;
-    }
-      return this.identity;
-  }
 
   getToken(){
     let token = JSON.stringify(localStorage.getItem('token'));
@@ -89,7 +70,5 @@ export class UserService {
       return this.token;
 
   }
-
-
 
 }

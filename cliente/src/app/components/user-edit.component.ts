@@ -20,41 +20,40 @@ export class UserEditComponet implements OnInit {
     
 
 
-    constructor( private _userService: UserService) {
-        this.titulo = 'Actualizar mis foking datosssss';
-        
-        //localStorage
-        this.identity = this._userService.getIdentity();
-        this.token = this._userService.getToken();
-        this.user = this.identity;
-        
-         // Asegúrate de que identity sea un objeto válido
-        if (this.identity && typeof this.identity === 'object') {
-            this.user = { ...this.identity };
-        } else {
-            this.user = new User('', '', '', '', '', 'ROLE_USER', '');
-            // Asegúrate de inicializar user correctamente
-        }
+  constructor(private _userService: UserService) {
+    this.titulo = 'Actualizar mis datos';
+    this.identity = this._userService.getIdentity();
+    this.token = this._userService.getToken();
+    if (this.identity && typeof this.identity === 'object' && this.identity._id) {
+      this.user = { ...this.identity };
+    } else {
+      this.user = new User('', '', '', '', '', 'ROLE_USER', '');
     }
+  }
     
     ngOnInit() {
         console.log("user-edit.component.ts cargado");
     }
+
+
     onSubmit(): void {
       console.log(this.user);
-    
+  
+      if (!this.user._id) {
+        this.alertMessage = 'El ID del usuario es necesario para actualizar.';
+        return;
+      }
+  
       this._userService.updateUser(this.user).subscribe(
         response => {
           if (!response.user) {
             this.alertMessage = 'El usuario no se ha actualizado';
           } else {
             localStorage.setItem('identity', JSON.stringify(this.user));
-    
-            const identityNameElement = document.getElementById("identity_name");
+            const identityNameElement = document.getElementById('identity_name');
             if (identityNameElement) {
               identityNameElement.innerHTML = this.user.name;
             }
-    
             this.alertMessage = 'El usuario se ha actualizado correctamente';
           }
         },
@@ -73,6 +72,5 @@ export class UserEditComponet implements OnInit {
       );
     }
     
-
 
 }

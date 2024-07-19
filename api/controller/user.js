@@ -97,27 +97,23 @@ function loginUser(req, res) {
 }
 
 async function updateUser(req, res) {
-    var userId = req.params.id;
-    var update = req.body;
-
-    console.log(`Updating user ${userId} with data:`, update);
-
+    const userId = req.params.id;
+    const update = req.body;
+  
     if (userId != req.user.sub) {
-        return res.status(500).send({ message: 'No tienes permiso' });
-    } 
-
-    User.findByIdAndUpdate(userId, update, { new: true })
-        .then(userUpdated => {
-            if (!userUpdated) {
-                return res.status(404).send({ message: 'Unable to update user' });
-            }
-            return res.status(200).send({ user: userUpdated });
-        })
-        .catch(err => {
-            console.error('Error updating user:', err);
-            return res.status(500).send({ message: 'Error updating the user', error: err });
-        });
-}
+      return res.status(403).send({ message: 'No tienes permiso' });
+    }
+  
+    try {
+      const userUpdated = await User.findByIdAndUpdate(userId, update, { new: true });
+      if (!userUpdated) {
+        return res.status(404).send({ message: 'No se ha podido actualizar el usuario' });
+      }
+      return res.status(200).send({ user: userUpdated });
+    } catch (err) {
+      return res.status(500).send({ message: 'Error al actualizar el usuario', error: err });
+    }
+  }  
 
 async function uploadImage(req, res) 
 {
