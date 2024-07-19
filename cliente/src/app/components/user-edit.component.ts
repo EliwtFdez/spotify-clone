@@ -49,7 +49,7 @@ export class UserEditComponet implements OnInit {
             this.alertMessage = 'El usuario no se ha actualizado';
           } else {
             localStorage.setItem('identity', JSON.stringify(this.user));
-            
+    
             const identityNameElement = document.getElementById("identity_name");
             if (identityNameElement) {
               identityNameElement.innerHTML = this.user.name;
@@ -71,7 +71,8 @@ export class UserEditComponet implements OnInit {
           }
         }
       );
-    }  
+    }
+    
 
 
 }

@@ -2,6 +2,8 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var cors = require('cors');  // Agregar esta línea
+
 
 var app = express();
 var user_routes = require('./routes/user');
@@ -11,6 +13,14 @@ var song_routes = require('./routes/song');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(cors());  // Agregar esta línea
+
+app.use(cors({
+    origin: 'http://localhost:4200'
+  }));
+
+app.options('*', cors());  // Manejar solicitudes preflight
 
 // Configurar cabeceras y CORS
 app.use((req, res, next) => {

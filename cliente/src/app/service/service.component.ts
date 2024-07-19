@@ -12,9 +12,9 @@ export class UserService {
   public url: string;
   public identity: any;
   public token: Object |any;
-  apiUrl: any;
+  private apiUrl = 'http://localhost:5000/api';
 
-  constructor(private _http: HttpClient) {
+  constructor(private http: HttpClient) {
     this.url = Global.url;
   }
 
@@ -28,7 +28,7 @@ export class UserService {
 
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-    return this._http.post<any>(`${this.url}/Login`, params, { headers: headers })
+    return this.http.post<any>(`${this.url}/Login`, params, { headers: headers })
                .pipe(map(res => res));
   }
 
@@ -38,12 +38,12 @@ export class UserService {
 
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-    return this._http.post<any>(`${this.url}/Register`, params, { headers: headers })
+    return this.http.post<any>(`${this.url}/Register`, params, { headers: headers })
                .pipe(map(res => res));
     
   }
 
- 
+ /*
   updateUser(user_to_update: any): Observable<any> {
     const json = JSON.stringify(user_to_update);
     const headers = new HttpHeaders({
@@ -52,8 +52,18 @@ export class UserService {
     });
   
     // Construir la URL sin el carácter ':'
-    return this._http.put<any>(`${this.url}/UpdateUser/:${user_to_update._id}`, json, { headers: headers })
+    return this._http.put<any>(`${this.url}/UpdateUser/${user_to_update._id}`, json, { headers: headers })
       .pipe(map(res => res));
+  }
+*/
+  updateUser(user: User): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put(`${this.apiUrl}/UpdateUser/${user._id}`, user, { headers });
   }
   
 

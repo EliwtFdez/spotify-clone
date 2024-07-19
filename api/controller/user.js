@@ -2,12 +2,12 @@
 
 var jwt = require('../services/jwt');
 
-const bcrypt = require('bcrypt-nodejs');
-const User = require('../models/user');
-const { request } = require('express');
-const user = require('../models/user');
-const fs = require('fs');
-const path = require('path'); 
+    const bcrypt = require('bcrypt-nodejs');
+    const User = require('../models/user');
+    const { request } = require('express');
+    const user = require('../models/user');
+    const fs = require('fs');
+    const path = require('path'); 
 
 function pruebas(req, res) { res.status(200).send({ message: 'Probando una acción del controlador' });}
 
@@ -54,6 +54,7 @@ function saveUser(req, res) {
         );
     });
 }
+
 function loginUser(req, res) {
     const params = req.body;
     const email = params.email ? params.email.toLowerCase() : '';
@@ -95,25 +96,25 @@ function loginUser(req, res) {
         });
 }
 
-async function updateUser(req, res) { // se agrego los .then y .catch como lo indican las nuevas
+async function updateUser(req, res) {
     var userId = req.params.id;
     var update = req.body;
 
-    if (userId != req.user.sub) { return res.status(500).send({ message: 'No tienes permiso' });} 
+    console.log(`Updating user ${userId} with data:`, update);
+
+    if (userId != req.user.sub) {
+        return res.status(500).send({ message: 'No tienes permiso' });
+    } 
 
     User.findByIdAndUpdate(userId, update, { new: true })
-        .then(userUpdated => 
-        {
-            if (!userUpdated) 
-            {
+        .then(userUpdated => {
+            if (!userUpdated) {
                 return res.status(404).send({ message: 'Unable to update user' });
-
             }
             return res.status(200).send({ user: userUpdated });
-
         })
-        .catch(err => 
-        {
+        .catch(err => {
+            console.error('Error updating user:', err);
             return res.status(500).send({ message: 'Error updating the user', error: err });
         });
 }
