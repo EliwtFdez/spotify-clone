@@ -1,5 +1,4 @@
 <!--Actualizar datos-->
-<hr/>
 <div class="col-lg-6">
   <h1>{{titulo}}</h1>
   <div *ngIf="alertMessage">
@@ -23,7 +22,7 @@
     </p>
 
     <div class="image_for_edit" *ngIf="user.image && user.image != null">
-      <img src="{{url +'Upload-images-user/'+user.image}}" alt=""/>
+      <img src="{{url +'/Get-image-file/'+user.image}}"  width="50px" alt=""/>
     </div>
     <p>
       <label for="">Sube tu foto: </label>

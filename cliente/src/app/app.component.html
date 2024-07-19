@@ -1,5 +1,11 @@
 <div *ngIf="identity" class="navigation col-lg-1">
-  <h1>{{title}}</h1>
+  <h1 class="headTitle">
+      <a [routerLink]="['/']">
+        {{title}}
+        <span class="glyphicon glyphicon-music" aria-hidden="true"></span>
+      </a>
+  </h1>
+  
   <div *ngIf="errorMessage">
     <div class="alert alert-info">{{errorMessage}}</div>
   </div>
@@ -19,24 +25,32 @@
 
   </nav>
   <nav id="user_logged">
+
+    <div class="UserImage">
+      <img id="imageLogged" src="{{url +'/Get-image-file/'+ identity.image}}" >
+    </div>
+
     <span id="identity_name">{{identity.name}}</span>
-    <span class="btn btn-warning" (click)="logout()">Cerrar Sesión</span>
+
     <a routerLink="[/misDatos]">
       <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
       Mis Datos
     </a>
+
+    <a (click)="logout()" class="btn-logout">
+      <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+      Cerrar Sesión
+    </a>
+
   </nav>
 </div>
 
-<div class="clearfix"></div>
-
 <div *ngIf="identity" class="central col-lg-11">
-  <p>Estás logeado en la aplicación</p>
     <router-outlet></router-outlet>
 </div>
 
 <!--Indentificate Login-->
-<div class="col-lg-12" *ngIf="!identity">
+<div class="col-lg-11" *ngIf="!identity">
   <div class="col-lg-6">
     <h1>Identifícate</h1>
     <div *ngIf="errorMessage">

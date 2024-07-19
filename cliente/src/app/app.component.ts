@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from './models/user';
 import { UserService } from './service/service.component';
+import { Global } from './service/service.global';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   providers: [UserService]
 })
+
 export class AppComponent implements OnInit {
   title = 'MiniSpotify';
   public user: User;
@@ -14,6 +17,7 @@ export class AppComponent implements OnInit {
 
   public identity: any;
   public token: Object |any;
+  public url: string | any;
   
   public errorMessage: string | any;
   public alertRegister:string | any;
@@ -21,6 +25,7 @@ export class AppComponent implements OnInit {
   constructor(private _userService: UserService) {
     this.user = new User('', '', '', '', '', 'ROLE_USER', '');
     this.user_register = new User('', '', '', '', '', 'ROLE_USER', '');
+    this.url = Global.url
   }
 
   ngOnInit() {

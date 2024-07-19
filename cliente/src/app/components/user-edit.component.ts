@@ -42,23 +42,25 @@ export class UserEditComponet implements OnInit {
   onSubmit(): void {
     console.log(this.user);
   
-    if (!this.user._id) {
+    if (!this.user._id) 
+    {
       this.alertMessage = 'El ID del usuario es necesario para actualizar.';
       return;
     }
   
     this._userService.updateUser(this.user).subscribe(
       response => {
-        if (!response.user) {
+        if (!response.user) 
+        {
           this.alertMessage = 'El usuario no se ha actualizado';
-        } else {
+        }
+         else 
+         {
           localStorage.setItem('identity', JSON.stringify(this.user));
           const identityNameElement = document.getElementById('identity_name');
           if (identityNameElement) {
             identityNameElement.innerHTML = this.user.name;
           }
-          
-          
           
           if (!this.filesToUpload) {
             
@@ -69,25 +71,15 @@ export class UserEditComponet implements OnInit {
                 this.user.image = result.image;
                 localStorage.setItem('identity', JSON.stringify(this.user));
 
-																	
-																										   
-					
-								  
-												 
-																			  
+                let imagePath=this.url+'/Get-image-file/'+this.user.image
+                document.getElementById('imageLogged')?.setAttribute('src',imagePath);
+															  
                 console.log(this.user);
-                
-			   
-							   
-									 
-															   
-				 
+
               }
             )  
           }
           this.alertMessage = 'El usuario se ha actualizado correctamente';
-
-
         }
       },
       error => {
