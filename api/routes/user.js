@@ -2,12 +2,9 @@
 
 var express = require ('express');
 var UserController = require('../controller/user');
-
 var md_auth = require ('../middleswares/authentication');
-
 var multipart = require('connect-multiparty');
 var md_upload = multipart({ uploadDir: './uploads/users'});
-
 var api = express.Router();
 
 

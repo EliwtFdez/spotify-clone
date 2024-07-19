@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
               this.token = token;
   
               if (!this.token || this.token.length <= 0) {
-                alert("Token no se ha generado");
+                this.errorMessage='Token no se ha generado';
               } else {
                 // Localstorage token disponible
                 localStorage.setItem('token', token);

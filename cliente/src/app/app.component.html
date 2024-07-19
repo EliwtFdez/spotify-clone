@@ -1,5 +1,8 @@
 <div *ngIf="identity" class="navigation col-lg-1">
   <h1>{{title}}</h1>
+  <div *ngIf="errorMessage">
+    <div class="alert alert-info">{{errorMessage}}</div>
+  </div>
   <nav id="navigation">
     <a href="#">
       <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -16,9 +19,9 @@
 
   </nav>
   <nav id="user_logged">
-    <span>{{identity.name}}</span>
+    <span id="identity_name">{{identity.name}}</span>
     <span class="btn btn-warning" (click)="logout()">Cerrar Sesión</span>
-    <a href="#">
+    <a routerLink="[/misDatos]">
       <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
       Mis Datos
     </a>
@@ -29,16 +32,16 @@
 
 <div *ngIf="identity" class="central col-lg-11">
   <p>Estás logeado en la aplicación</p>
-    <user-edit></user-edit>
+    <router-outlet></router-outlet>
 </div>
 
+<!--Indentificate Login-->
 <div class="col-lg-12" *ngIf="!identity">
   <div class="col-lg-6">
     <h1>Identifícate</h1>
     <div *ngIf="errorMessage">
-      <div class="alert alert-info">
-        <strong>Error!</strong> {{errorMessage}}
-      </div>
+      <div class="alert alert-info">{{errorMessage}}</div>
+
     </div>
     <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="col-md-7">
       <p>
@@ -54,6 +57,8 @@
     </form>
   </div>
   
+  <!--Registrate Login-->
+
   <div class="col-lg-6">
     <h1>Regístrate</h1>
     <div *ngIf="alertRegister">

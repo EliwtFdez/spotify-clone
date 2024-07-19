@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-
+import { routing, appRoutingProviders } from './app.routing';
 import { AppComponent } from './app.component';
 import { UserEditComponet } from './components/user-edit.component';
 
@@ -17,10 +17,11 @@ import { UserEditComponet } from './components/user-edit.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    routing,
     HttpClientModule
     
   ],
-  providers: [],
+  providers: [appRoutingProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

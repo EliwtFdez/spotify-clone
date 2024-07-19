@@ -60,7 +60,7 @@ function loginUser(req, res) {
     const password = params.password;
 
     if (!email || !password) {
-        return res.status(400).send({ message: 'Enter all required fields' });
+        return res.status(404).send({ message: 'Enter all required fields' });
     }
 
     console.log(`Found user with email: ${email}`);
@@ -69,6 +69,7 @@ function loginUser(req, res) {
             if (!user) {
                 console.log('User not found');
                 return res.status(404).send({ message: 'User does not exist' });
+                
             }
 
             console.log('Usuario encontrado:', user);
@@ -94,9 +95,11 @@ function loginUser(req, res) {
         });
 }
 
-function updateUser(req, res) { // se agrego los .then y .catch como lo indican las nuevas
+async function updateUser(req, res) { // se agrego los .then y .catch como lo indican las nuevas
     var userId = req.params.id;
     var update = req.body;
+
+    if (userId != req.user.sub) { return res.status(500).send({ message: 'No tienes permiso' });} 
 
     User.findByIdAndUpdate(userId, update, { new: true })
         .then(userUpdated => 

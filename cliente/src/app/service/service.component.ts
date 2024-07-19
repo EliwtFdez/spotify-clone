@@ -3,14 +3,16 @@ import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Global } from './service.global';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root' 
 })
 export class UserService {
   public url: string;
-  identity: any;
-  token: any;
+  public identity: any;
+  public token: Object |any;
+  apiUrl: any;
 
   constructor(private _http: HttpClient) {
     this.url = Global.url;
@@ -42,14 +44,18 @@ export class UserService {
   }
 
  
-  update_user(user_to_update: any): Observable<any> {
+  updateUser(user_to_update: any): Observable<any> {
     const json = JSON.stringify(user_to_update);
-    const params = json;
-    const headers = new HttpHeaders({'Content-Type': 'application/json', 'Authorization':this.getToken()});
-
-    return this._http.put<any>(`${this.url}/UpdateUser/${user_to_update._id}`, params, { headers: headers })
-               .pipe(map(res => res));
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json', 
+      'Authorization': this.getToken()
+    });
+  
+    // Construir la URL sin el carácter ':'
+    return this._http.put<any>(`${this.url}/UpdateUser/:${user_to_update._id}`, json, { headers: headers })
+      .pipe(map(res => res));
   }
+  
 
   getIdentity(){
     let identity = JSON.stringify(localStorage.getItem('indentity'));
