@@ -1,25 +1,28 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../service/service.component";
 import { Global } from "../service/service.global";
 import { Artist } from "../models/artist";
 import { ArtistService } from "../service/artist.service";
+import { CommonModule } from "@angular/common";
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'artist-edit',
+  selector: 'artist-add',
   templateUrl: '../view/artist-add.html',
-  providers: [UserService, ArtistService]
-})
+  
 
-export class ArtistEditComponent implements OnInit {
+  providers: [UserService, ArtistService,CommonModule]
+})
+export class ArtistAddComponent implements OnInit {
   public title: string;
   public artista: Artist; // artist
   public identity: any;
   public token: any;
   public url: string;
   public alertMessage: string = '';
-  public is_edit: boolean;  //implementado tutorial
-  
+  public is_edit: boolean = false; 
 
   constructor(
     private _route: ActivatedRoute,
@@ -32,33 +35,21 @@ export class ArtistEditComponent implements OnInit {
     this.token = this._userService.getToken();
     this.url = Global.url;
     this.artista = new Artist('', '', '');
-    this.is_edit = true;
+
   }
 
   ngOnInit(): void {
-    console.log('Artist-edit.component.ts initialized');
+    console.log('Artist-add.component.ts initialized');
   }
-  
-  
-  getArtist(): void {
-    this._route.params.subscribe((params: Params) => {
-      let id = params['id'];
-      this._artistService.getArtist(this.token, id).subscribe(
-        response => {
-          if (!response.artist) {
-            this._router.navigate(['/']);
-          } else {
-            this.artista = response.artist;
-          }
-        },
-        error => {
-          console.error('Error fetching artist:', error);
-          // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje al usuario
-        }
-      );
-    });
+
+  fileChangeEvent(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.artista.image = file;
+      // Lógica adicional para manejar el archivo si es necesario
+    }
   }
-  
+
   onSubmit(): void {
     console.log(this.artista);
 
@@ -89,14 +80,5 @@ export class ArtistEditComponent implements OnInit {
         }
       }
     );
-  }
-
-  public filesToUpload: Array<File> = []; // Inicializa como arreglo vacío
-  fileChangeEvent(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.artista.image = file;
-      // Lógica adicional para manejar el archivo si es necesario
-    }
   }
 }

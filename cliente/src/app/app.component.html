@@ -5,7 +5,7 @@
         <span class="glyphicon glyphicon-music" aria-hidden="true"></span>
       </a>
   </h1>
-  
+
   <div *ngIf="errorMessage">
     <div class="alert alert-info">{{errorMessage}}</div>
   </div>
@@ -14,7 +14,7 @@
       <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
       Buscar
     </a>
-    <a [routerLink]="['/Artist',1]" [routerLinkActive]="['actived']">
+    <a [routerLink]="['/artist',1]" [routerLinkActive]="['actived']">
       <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
       Artistas
     </a>
@@ -31,7 +31,7 @@
     </div>
 
     <span id="identity_name">{{identity.name}}</span>
-    
+
     <a [routerLink]="['/misDatos']" routerLinkActive="active" class="active">
       <span aria-hidden="true" class="glyphicon glyphicon-cog"></span> Mis Datos
     </a>
@@ -69,7 +69,7 @@
       <input type="submit" value="Entrar" class="btn btn-primary"/>
     </form>
   </div>
-  
+
   <!--Registrate Login-->
 
   <div class="col-lg-6">

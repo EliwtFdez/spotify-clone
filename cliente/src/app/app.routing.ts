@@ -2,15 +2,19 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { UserEditComponet } from './components/user-edit.component';  // Importar UserEditComponent correctamente
-import { ArtistListComponent } from './components/artist-edit.component';
+import { ArtistListComponent } from './components/artist-list.component';
+import { HomeComponent } from './components/home.component';
+import { ArtistAddComponent } from './components/artist-add.component';
+import { ArtistEditComponent } from './components/artist-edit.component';
 
 
 const appRoutes: Routes = [
-  { path: '', redirectTo : 'artist/1', pathMatch: 'full' },
-  { path: '', component: ArtistListComponent },
+  { path: '', component: HomeComponent  },
   { path: 'artist/:page', component: ArtistListComponent },
+  { path: 'CrearArtista', component: ArtistAddComponent },
   { path: 'misDatos', component: UserEditComponet },
-  { path: '**', component: ArtistListComponent }
+  { path: 'editarArtista/:id', component: ArtistEditComponent },
+  { path: '**', component: HomeComponent }
 ];
 
 export const appRoutingProviders: any[] = [];

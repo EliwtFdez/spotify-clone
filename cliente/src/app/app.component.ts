@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { User } from './models/user';
 import { UserService } from './service/service.component';
 import { Global } from './service/service.global';
+import { ActivatedRoute, Router , Params } from "@angular/router";
+
 
 
 @Component({
@@ -18,11 +20,11 @@ export class AppComponent implements OnInit {
   public identity: any;
   public token: Object |any;
   public url: string | any;
-  
+
   public errorMessage: string | any;
   public alertRegister:string | any;
 
-  constructor(private _userService: UserService) {
+  constructor(private _userService: UserService, private _route: ActivatedRoute, private _router: Router) {
     this.user = new User('', '', '', '', '', 'ROLE_USER', '');
     this.user_register = new User('', '', '', '', '', 'ROLE_USER', '');
     this.url = Global.url
@@ -33,37 +35,37 @@ export class AppComponent implements OnInit {
     this.token = this._userService.getToken();
     console.log(this.identity);
     console.log(this.token);
-    
+
   }
 
   public onSubmit() {
     console.log(this.user);
-  
+
     this._userService.signup(this.user).subscribe(
       response => {
         console.log(response);
-        
+
         let identity = response.user;
         this.identity = identity;
-  
+
         if (!this.identity._id) {
           alert("Usuario no está identificado");
         } else {
           // Mantener usuario en sesión
           localStorage.setItem('identity', JSON.stringify(identity));
-  
+
           // Token petición HTTP
           this._userService.signup(this.user, true).subscribe(
             response => {
               let token = response.token;
               this.token = token;
-  
+
               if (!this.token || this.token.length <= 0) {
                 this.errorMessage='Token no se ha generado';
               } else {
                 // Localstorage token disponible
                 localStorage.setItem('token', token);
-  
+
                 console.log(token);
                 console.log(identity);
               }
@@ -90,15 +92,16 @@ export class AppComponent implements OnInit {
 
     this.identity = null;
     this.token = null;
+    this._router.navigate(['/']);
   }
-  
+
   onSubmitRegister() {
     console.log(this.user_register);
     this._userService.register(this.user_register).subscribe(
       response => {
         let user = response.user;
         this.user_register = user;
-  
+
         if (!user._id) {
           this.alertRegister = 'Error al registrarse';
         } else {
@@ -121,6 +124,6 @@ export class AppComponent implements OnInit {
       }
     );
   }
-  
+
 
 }
