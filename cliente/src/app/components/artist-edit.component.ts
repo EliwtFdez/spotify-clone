@@ -4,13 +4,13 @@ import { UserService } from "../service/service.component";
 import { Global } from "../service/service.global";
 import { Artist } from "../models/artist";
 import { ArtistService } from "../service/artist.service";
+import { UploadService } from "../service/upload.service";
 
 @Component({
   selector: 'artist-edit',
   templateUrl: '../view/artist-add.html',
-  providers: [UserService, ArtistService]
+  providers: [UserService, ArtistService, UploadService]
 })
-
 export class ArtistEditComponent implements OnInit {
   public title: string;
   public artista: Artist; // artist
@@ -18,16 +18,17 @@ export class ArtistEditComponent implements OnInit {
   public token: any;
   public url: string;
   public alertMessage: string = '';
-  public is_edit: boolean;  //implementado tutorial
-  
+  public is_edit: boolean;
+  public filesToUpload: Array<File> = []; // Inicializa como arreglo vacío
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
     private _userService: UserService,
-    private _artistService: ArtistService
+    private _artistService: ArtistService,
+    private _uploadService: UploadService
   ) {
-    this.title = 'Crear nuevo artista';
+    this.title = 'Editar artista';
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
     this.url = Global.url;
@@ -37,9 +38,9 @@ export class ArtistEditComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Artist-edit.component.ts initialized');
+    this.getArtist();
   }
-  
-  
+
   getArtist(): void {
     this._route.params.subscribe((params: Params) => {
       let id = params['id'];
@@ -53,50 +54,65 @@ export class ArtistEditComponent implements OnInit {
         },
         error => {
           console.error('Error fetching artist:', error);
-          // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje al usuario
         }
       );
     });
   }
-  
+
   onSubmit(): void {
     console.log(this.artista);
+    this._route.params.subscribe((params: Params) => {
+      let id = params['id'];
 
-    this._artistService.addArtist(this.token, this.artista).subscribe(
-      response => {
-        console.log('Response from server:', response);
+      this._artistService.editArtist(this.token, id, this.artista).subscribe(
+        response => {
+          console.log('Response del servidor:', response);
 
-        if (!response.Artist) {
-          this.alertMessage = 'Error en el servidor';
-        } else {
-          this.alertMessage = 'El artista se ha creado correctamente';
-          this.artista = response.Artist;
-          // Navigate to edit page if needed
-          // this._router.navigate(['editar-artista', response.Artist._id]);
-        }
-      },
-      error => {
-        const errorMessage = <any>error;
-        if (errorMessage != null) {
-          try {
-            const body = JSON.parse(error.error);
-            this.alertMessage = body.message;
-          } catch (e) {
-            this.alertMessage = 'Error desconocido al actualizar';
+          if (!response.artist) {
+            this.alertMessage = 'Error en el servidor';
+          } else {
+            this.alertMessage = 'El artista se ha actualizado correctamente';
+
+            // Subir el archivo de imagen
+            this._uploadService.makeFileRequest(
+              `${this.url}/Upload-images-Artist/${id}`,
+              [],
+              this.filesToUpload,
+              this.token,
+              'image'
+            ).then(
+              (result: any) => {
+                console.log(result);
+                // Actualiza la imagen del artista si es necesario
+              },
+              (error: any) => {
+                console.error(error);
+              }
+            );
+
+            // Navegar a otra página si es necesario
+            // this._router.navigate(['editar-artista', response.artist._id]);
           }
-
-          console.log(error);
+        },
+        error => {
+          const errorMessage = <any>error;
+          console.log('Error:', errorMessage);
+          if (errorMessage != null) {
+            try {
+              const body = JSON.parse(error.error);
+              this.alertMessage = body.message;
+            } catch (e) {
+              this.alertMessage = 'Error desconocido al actualizar';
+            }
+            console.log(error);
+          }
         }
-      }
-    );
+      );
+    });
   }
 
-  public filesToUpload: Array<File> = []; // Inicializa como arreglo vacío
-  fileChangeEvent(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.artista.image = file;
-      // Lógica adicional para manejar el archivo si es necesario
-    }
+  fileChangeEvent(fileInput: any): void {
+    this.filesToUpload = <Array<File>>fileInput.target.files;
+    console.log(this.filesToUpload); // Para verificar que los archivos se están cargando correctamente
   }
 }

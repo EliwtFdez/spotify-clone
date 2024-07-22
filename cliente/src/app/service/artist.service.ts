@@ -35,7 +35,6 @@ export class ArtistService {
       .pipe(map(res => res));
   }
 
-  // funciona addArtist
   addArtist(token: string, artist: Artist): Observable<any> {
     const params = JSON.stringify(artist);
     const headers = new HttpHeaders({
@@ -47,7 +46,6 @@ export class ArtistService {
       .pipe(map(res => res));
   }
 
-  //Editar 
   editArtist(token: string, id: string, artist: Artist): Observable<any> {
     const params = JSON.stringify(artist);
     const headers = new HttpHeaders({
