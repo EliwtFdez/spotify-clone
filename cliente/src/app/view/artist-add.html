@@ -1,4 +1,4 @@
-<div class="col-lg-6">
+<div class="col-lg-6" *ngIf="identity && identity.role == 'ROLE_ADMIN'">
 
   <h1>{{ title }}</h1>
 
@@ -21,7 +21,7 @@
     </p>
 
     <div *ngIf="is_edit">
-      <div class="image_for_edit" *ngIf="artista.image != null">
+      <div class="artist_image_for_edit" *ngIf="artista.image && artista.image != null">
         <img [src]="url + '/Get-Image-Artist/' + artista.image" alt="">
       </div>
       <p>
@@ -35,4 +35,9 @@
 
   </form>
 
+</div>
+
+<div class="col-lg-6" *ngIf="!identity || identity.role !== 'ROLE_ADMIN'">
+  <h1>Error</h1>
+  <p>No tienes acceso crack</p>
 </div>
