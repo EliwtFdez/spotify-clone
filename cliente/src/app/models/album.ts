@@ -1,10 +1,11 @@
 export class Album{
+    id: any;
     constructor(
-        public title: string,
-        public description: string,
-        public year: number,
-        public image: string,
-        public artist: string,
-
+      public _id: string,
+      public title: string,
+      public year: number,
+      public image: string,
+      public artist: string
     ){}
-}
+  }
+  

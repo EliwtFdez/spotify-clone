@@ -7,6 +7,7 @@ import { ArtistService } from "../service/artist.service";
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { Album } from "../models/album";
 
 @Component({
   selector: 'artist-add',
@@ -22,6 +23,7 @@ export class ArtistAddComponent implements OnInit {
   public token: any;
   public url: string;
   public alertMessage: string = '';
+  public album: Album;
   public is_edit: boolean = false; 
 
   constructor(
@@ -34,7 +36,9 @@ export class ArtistAddComponent implements OnInit {
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
     this.url = Global.url;
-    this.artista = new Artist('', '', '');
+    this.artista = new Artist('', '', '','');
+    this.album = new Album('', '', 2024, '', '');
+
 
   }
 

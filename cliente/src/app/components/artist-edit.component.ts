@@ -32,7 +32,7 @@ export class ArtistEditComponent implements OnInit {
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
     this.url = Global.url;
-    this.artista = new Artist('', '', '');
+    this.artista = new Artist('', '', '','');
     this.is_edit = true;
   }
 

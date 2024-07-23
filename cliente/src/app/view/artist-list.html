@@ -1,6 +1,6 @@
 <div class="head-page" *ngIf="identity">
     <h1>{{title}}</h1>
-<a [routerLink]="['/CrearArtista']" *ngIf="identity.role == 'ROLE_ADMIN'" class="btn btn-default">Añadir Artista</a>
+<a [routerLink]="['/CrearArtista']" *ngIf="identity.role == 'ROLE_ADMIN'" class="btn btn-primary">Añadir Artista</a>
 
 
 </div>
@@ -19,12 +19,18 @@
             <img src="{{ url + '/Get-Image-Artist/' + artist.image }}"  />
         </div>
         <div class="artist-name">
-            <a href="#">
+            <a [routerLink]="['/Artista/',artist._id]">
                 {{artist.name}}
             </a>
             <div class="buttons" *ngIf="identity.role == 'ROLE_ADMIN' ">
                 <a [routerLink]="['/editarArtista/',artist._id]" class="btn btn-sm btn-warning">Editar</a>
-                <a [routerLink]="['/#/',artist._id]" class="btn btn-sm btn-danger">Borrar</a>
+                <a (click)="onDeleteConfirm(artist._id)" class="btn btn-sm btn-danger">    Eliminar</a>
+
+            </div>
+
+            <div class="seguro" *ngIf="confirmado == artist._id"> 
+                <a (click)="onDeleteArtist(artist._id)" class="btn btn-sm btn-danger">    Eliminar</a>
+                <a (click)="onCancelArtist()" class="btn btn-primary">    Cancelar</a>
 
             </div>
         </div>
