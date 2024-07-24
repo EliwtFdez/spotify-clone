@@ -1,46 +1,54 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-import { routing, appRoutingProviders } from './app.routing';
+//Importar modulo para formularios
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
 import { AppComponent } from './app.component';
-import { UserEditComponet } from './components/user-edit.component';
+//Cargamos el componente para edición de usuario
+import { UserEditComponent } from './components/user-edit.component';
 import { ArtistListComponent } from './components/artist-list.component';
 import { HomeComponent } from './components/home.component';
 import { ArtistAddComponent } from './components/artist-add.component';
-import { ArtistService } from './service/artist.service';
 import { ArtistEditComponent } from './components/artist-edit.component';
 import { ArtistDetailComponent } from './components/artist-detail.component';
 import { AlbumAddComponent } from './components/album-add.component';
 import { AlbumEditComponent } from './components/album-edit.component';
-
-
+import { AlbumDetailComponent } from './components/album-detail.component';
+import { SongAddComponent } from './components/song-add.component';
+import { SongEditComponent } from './components/song-edit.component';
+import { PlayerComponent } from './components/player.component';
+//Se importa el router
+import {routing,appRoutingProviders} from './app.routing';
 
 @NgModule({
+  //Componentes y directivas
   declarations: [
     AppComponent,
-    HomeComponent,
-    UserEditComponet,
+    UserEditComponent, //Para acceder a las directivas dentro del componente
     ArtistListComponent,
+    HomeComponent,
     ArtistAddComponent,
     ArtistEditComponent,
+    ArtistDetailComponent,
     AlbumAddComponent,
     AlbumEditComponent,
-    ArtistDetailComponent
+    AlbumDetailComponent,
+    SongAddComponent,
+    SongEditComponent,
+    PlayerComponent
     
-
   ],
+  //Módulos propios y del framework
   imports: [
     BrowserModule,
-    AppRoutingModule,
     FormsModule,
-    routing,
-    HttpClientModule,
-    ReactiveFormsModule
-
+    HttpModule,
+    routing //Módulo de componentes
   ],
-  providers: [appRoutingProviders],
+  //Servicios
+  providers: [appRoutingProviders], //Provider
+  //Componente principal
   bootstrap: [AppComponent]
 })
 export class AppModule { }

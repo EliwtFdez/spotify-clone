@@ -1,82 +1,110 @@
-<div class="container mt-5">
-    <h1 class="text-center mb-4">{{titulo}}</h1>
-  
-    <div *ngIf="alertMessage" class="alert alert-info text-center">
-      {{alertMessage}}
-    </div>
-  
-    <form #formAlbum="ngForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
-      <div class="form-group">
-        <label for="title">Titulo</label>
-        <input 
-          type="text" 
-          id="title"
-          #title="ngModel" 
-          name="title" 
-          [(ngModel)]="album.title" 
-          required 
-          class="form-control"
-          [class.is-invalid]="!title.valid && title.touched"
-          [class.is-valid]="title.valid && title.touched"
-        />
-        <div *ngIf="!title.valid && title.touched" class="invalid-feedback">
-          El titulo es obligatorio
-        </div>
-      </div>
-  
-      <div class="form-group">
-        <label for="description">Descripción</label>
-        <textarea 
-          id="description"
-          #description="ngModel" 
-          name="description" 
-          [(ngModel)]="album.description" 
-          required 
-          class="form-control"
-          [class.is-invalid]="!description.valid && description.touched"
-          [class.is-valid]="description.valid && description.touched"
-        ></textarea>
-        <div *ngIf="!description.valid && description.touched" class="invalid-feedback">
-          La descripción es obligatoria
-        </div>
-      </div>
-  
-      <div class="form-group">
-        <label for="year">Año</label>
-        <input 
-          type="text" 
-          id="year"
-          #year="ngModel" 
-          name="year" 
-          [(ngModel)]="album.year" 
-          required 
-          class="form-control"
-          [class.is-invalid]="!year.valid && year.touched"
-          [class.is-valid]="year.valid && year.touched"
-        />
-        <div *ngIf="!year.valid && year.touched" class="invalid-feedback">
-          El Año es obligatorio
-        </div>
-      </div>
+<div *ngIf="identity" class="central col-lg-12 text-center">
+	
+  <h1>
+    {{title}}
+  </h1>
 
-      <div *ngIf="is_edit">
-            <div class="album_image_for_edit" *ngIf="album.image && album.image != null">
-              <img [src]="url + '/Get-Image-Album/' + album.image" alt="">
-            </div>
-            <p>
-              <label for="">Sube la imagen del Album</label>
-              <input type="file" (change)="fileChangeEvent($event)" placeholder="Subir imagen..."> 
-            </p>
+  	<!-- Formulario-->
+	<div class="col-sm-12">
+	
+		<div *ngIf="alertMessage">
+	     
+	    	<div class="alert alert-info">
+	     
+	    	{{alertMessage}}
+	   
+	    	</div>
+	      
+	    </div>
+
+	</div>
+
+	<form #formAlbum="ngForm" (ngSubmit)="onSubmit()" class="form-horizontal">
       
-          </div>
-  
-      <button 
-        type="submit" 
-        class="btn btn-success btn-block mt-4" 
-        [disabled]="!formAlbum.form.valid"
-      >
-        {{titulo}}
-      </button>
+	    <div class="form-group">
+
+	    	<label for="textinput" class="control-label col-sm-2">Título</label>
+
+	      	<div class="col-sm-10">
+
+		        <!-- Directiva de atributo y binding -->
+		        <input type="text" #titulo="ngModel" name="aa-titulo" [(ngModel)]="album.title" class="form-control" id="aa-titulo" placeholder="Título" required>
+		            
+		        <span *ngIf="(!titulo.valid && titulo.touched) || !titulo.empty && titulo.untouched">
+		          El título del álbum es obligatorio.
+		        </span>
+	          
+	      	</div>
+
+	    </div>
+
+	    <div class="form-group">
+
+	    	<label for="textinput" class="control-label col-sm-2">Descripción</label>
+
+	      	<div class="col-sm-10">
+
+		        <!-- Directiva de atributo y binding -->
+		        <input type="text" #descripcion="ngModel" name="aa-descripcion" [(ngModel)]="album.description" class="form-control" id="aa-descripcion" placeholder="Descripción" required>
+		            
+		        <span *ngIf="(!descripcion.valid && descripcion.touched) || !descripcion.empty && descripcion.untouched">
+		          La descripción del álbum es obligatoria.
+		        </span>
+	          
+	      	</div>
+
+	   	</div>
+
+	    <div class="form-group">
+
+	    	<label for="textinput" class="control-label col-sm-2">Año</label>
+
+	      	<div class="col-sm-10">
+
+		        <!-- Directiva de atributo y binding -->
+		        <input type="text" #anio="ngModel" name="aa-anio" [(ngModel)]="album.year" class="form-control" id="aa-anio" placeholder="Año" required>
+		            
+		        <span *ngIf="(!anio.valid && anio.touched) || !anio.empty && anio.untouched">
+		          El año del álbum es obligatorio.
+		        </span>
+	          
+	      	</div>
+
+	   	</div>
+
+		<div *ngIf="isEdit" class="form-group">
+	      
+	      <label for="textinput" class="control-label col-sm-2">Imagen</label>
+
+	      <div class="col-sm-10">
+	          
+	        <input type="file" (change)="fileChangeEvent($event)"  name="ea-avatar" class="form-control" id="ea-avatar" placeholder="Carátula del álbum">
+
+	        <br/>
+	          
+	        <img *ngIf="album.image != 'null'" src="{{url + 'get_image_album/' + album.image}}" class="avatar">
+	      
+	      </div>
+
+	      <div class="text-right col-sm-12">
+	      
+	        <button type="submit" [disabled]="!formAlbum.form.valid" id="ea-actualizar" name="ea-actualizar" class="btn btn-verde" aria-label="Editar artista">Editar álbum</button>
+	      
+	      </div>
+	      
+	    </div>
+
+
+    	<div *ngIf="!isEdit" class="form-group">
+      
+      		<div class="text-right col-sm-12">
+      
+        		<button type="submit" [disabled]="!formAlbum.form.valid" id="aa-añadir" name="aa-añadir" class="btn btn-verde" aria-label="Añadir álbum">Añadir álbum</button>
+      
+      		</div>
+      
+   		</div>
+
     </form>
-  </div>
-  
+	
+</div>

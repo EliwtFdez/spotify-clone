@@ -1,118 +1,163 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Params, Router } from "@angular/router";
-import { UserService } from "../service/service.component";
-import { Global } from "../service/service.global";
-import { Artist } from "../models/artist";
-import { ArtistService } from "../service/artist.service";
-import { Album } from "../models/album";
-import { AlbumService } from "../service/album.service";
-import { AlbumEditComponent } from "./album-edit.component";
+import {Component,OnInit} from '@angular/core';
+//Elementos del router para poder hacer redirecciones
+//Recoger parámetros de la URL
+import {Router,ActivatedRoute, Params} from '@angular/router';
+import {UserService} from '../services/user.service';
+import {ArtistService} from '../services/artist.service';
+import {AlbumService} from '../services/album.service';
+import {GLOBAL} from '../services/global';
+import {Artist} from '../models/artist';
+import {Album} from '../models/album';
+import swal from 'sweetalert';
 
-
-@Component({
-  selector: 'artist-detail',
-  templateUrl: '../view/artist-detail.html',
-  providers: [UserService, ArtistService, AlbumService]
+@Component(
+{
+	selector:'artist-detail',
+	templateUrl:'../views/artist-detail.html',
+	providers:[UserService,ArtistService,AlbumService]
 })
-export class ArtistDetailComponent implements OnInit {
-  public title: string = 'Detalles del Artista';
-  public artist: Artist = new Artist('', '', '',''); // Inicializa con un objeto Artist vacío
-  public album = new Album('', '', 2024, '', '');
-  public identity: any;
-  public token: any;
-  public url: string;
-  public alertMessage: string = '';
-  public albums: Album[] = [];
-  public artistId: string | undefined; // Propiedad pública para almacenar el _id
-  public albumId: string | undefined; // Propiedad pública para almacenar el _id
 
-  public confirmado: string | null = null; // Propiedad para manejo de confirmación
+export class ArtistDetailComponent implements OnInit
+{
+	public titulo:string;
+	public artist:Artist;
+	public albums:Album[];
+	public identity;
+	public token;
+	public url:string;
+	public user;
+	public alertMessage;
+	public isEdit;
 
+	constructor(private _route:ActivatedRoute, private _router:Router, private _userService: UserService, private _artistService:ArtistService,private _albumService:AlbumService)
+	{
+		this.titulo = 'Detalles del artista';
+		this.identity = localStorage.getItem('identity');
+		this.token = localStorage.getItem('token');
+		this.url = GLOBAL.url;
+	    this.user = JSON.parse(this.identity);
+	    this.isEdit = true;
+	}
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _userService: UserService,
-    private _artistService: ArtistService,
-    private _albumService: AlbumService
-  ) {
-    this.identity = this._userService.getIdentity();
-    this.token = this._userService.getToken();
-    this.url = Global.url;
-   
-  }
+	ngOnInit()
+	{
+		console.log('Componente artist-edit.component.ts cargado');
+		//Llamar al método del API para obtener artista
+		this.getArtist();
+	}
 
-  ngOnInit(): void {
-    console.log('Artist-detail.component.ts initialized');
-    this.getArtist();
-  }
+	getArtist()
+	{
+		this._route.params.forEach((params: Params) =>
+		{
+			let id = params['id'];
+			this._artistService.getArtist(this.token,id).subscribe(
+				response =>
+				{
+					if(!response.artist)
+					{
+						this._router.navigate(['/']);
+					}
+					else
+					{
+						this.artist = response.artist;
+						//Obtener albúms del artista
+						this._albumService.getAlbums(response.artist._id).subscribe(
+							response =>
+							{
+								if(!response.albums)
+								{
+									//this._router.navigate(['/']);
+									this.alertMessage = 'El artista aún no tiene álbums';
+								}
+								else
+								{
+									this.albums = response.albums;
+									console.log(this.albums);
+								}
+							},
+							error =>
+							{
+								var errorMessage = <any>error;
+					            if(errorMessage != null)
+					            {
+					        	    //Parseo de respuesta
+					                var body = JSON.parse(error._body);
+					                this.alertMessage = body.message; //Si mando el error me imprime el error
+					                console.log("Error: " + error);
+					            }
+							}
+						);
+					}
+				},
+				error =>
+				{
+					var errorMessage = <any>error;
+		            if(errorMessage != null)
+		            {
+		        	    //Parseo de respuesta
+		                var body = JSON.parse(error._body);
+		                this.alertMessage = body.message; //Si mando el error me imprime el error
+		                console.log("Error: " + error);
+		            }
+				}
+			);
+		});
+	}
 
+	borrarAlbum(id)
+	{
+		swal({
+  			title: "Eliminar :(",
+  			text: "¿Desea eliminar el álbum?",
+  			icon: "warning",
+  			buttons: ["Cancelar", "Borrar"],
+  			dangerMode: true,
+		}).then((willDelete) => 
+		{
+  			if (willDelete) 
+  			{
+  				this._albumService.deleteAlbum(id).subscribe(
+					response =>
+					{
+						if(!response.album)
+						{
+							swal("Error al eliminar álbum, intente nuevamente.", 
+			    			{
+			      				icon: "error", 
+			    			});
+						}
+						else
+						{
+							swal("Álbum eliminado satisfactoriamente.", 
+			    			{
+			      				icon: "success", 
+			    			});
+							this.getArtist();
+						}
+					},
+					error =>
+					{
+						/*var errorMessage = <any>error;
+				        if(errorMessage != null)
+				    	{
+				            //Parseo de respuesta
+				            var body = JSON.parse(error._body);
+				            this.alertMessage = body.message; //Si mando el error me imprime el error
+				            console.log("Error: " + error);
+				        }*/
+				        swal("Error al eliminar álbum, intente nuevamente.", 
+			    			{
+			      				icon: "error", 
+			    			});
+					}
+				);
+  			}
+  			else 
+  			{
+    			swal("¡El álbum no se eliminó! :D"); 
+  			}
+		});
+	}
 
-  getArtist(): void {
-    this._route.params.subscribe((params: Params) => {
-        let id = params['id'];
-        
-        this._artistService.getArtist(this.token, id).subscribe(
-            response => {
-                if (!response.artist) {
-                    this._router.navigate(['/']);
-                } else {
-                    this.artist = response.artist;
-                    this.artistId = (this.artist as any)._id; // Asignar el _id a una variable separada
-                    this.artist.id = this.artistId; // Asignar el _id a la propiedad id
-                    console.log('Artist ID:', this.artistId);
-
-                    this._albumService.getAlbums(this.token, this.artistId).subscribe(
-                        albumResponse => {
-                            if (!albumResponse.albums) {
-                                this.alertMessage = 'Este artista no tiene albums';
-                            } else {
-                                this.albums = albumResponse.albums;
-                                // Asignar albumId a cada álbum
-                                this.albums = this.albums.map(album => {
-                                    album.id = (album as any)._id;
-                                    return album;
-                                });
-                            }
-                        },
-                        error => {
-                            console.error('Error fetching albums:', error);
-                            this.alertMessage = 'Error fetching albums';
-                        }
-                    );
-                }
-            },
-            error => {
-                console.error('Error fetching artist:', error);
-                this.alertMessage = 'Error fetching artist';
-            }
-        );
-    });
-}
-
-
-
-
-  onDeleteConfirm(id: string) {
-    this.confirmado = id;
-  }
-
-  onDeleteAlbum(id: string) {
-    this._albumService.deleteAlbum(this.token, id).subscribe(
-      response => {
-        if (!response.album) {
-          alert('Error en el servidor');
-        }
-        this.getArtist();
-      },
-      error => {
-        console.log('Error:', error);
-        this.alertMessage = 'Error desconocido al eliminar el álbum';
-      }
-    );
-  }
-
-  onCancelAlbum() {
-    this.confirmado = null;
-  }
 }

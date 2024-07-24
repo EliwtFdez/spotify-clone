@@ -1,118 +1,147 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Params, Router } from "@angular/router";
-import { UserService } from "../service/service.component";
-import { Global } from "../service/service.global";
-import { Artist } from "../models/artist";
-import { ArtistService } from "../service/artist.service";
-import { UploadService } from "../service/upload.service";
+import {Component,OnInit} from '@angular/core';
+//Elementos del router para poder hacer redirecciones
+//Recoger parámetros de la URL
+import {Router,ActivatedRoute, Params} from '@angular/router';
+import {UserService} from '../services/user.service';
+import {ArtistService} from '../services/artist.service';
+import {UploadService} from '../services/upload.service';
+import {GLOBAL} from '../services/global';
+import {Artist} from '../models/artist';
 
-@Component({
-  selector: 'artist-edit',
-  templateUrl: '../view/artist-add.html',
-  providers: [UserService, ArtistService, UploadService]
+@Component(
+{
+	selector:'artist-edit',
+	templateUrl:'../views/artist-add.html',
+	providers:[UserService,ArtistService,UploadService]
 })
-export class ArtistEditComponent implements OnInit {
-  public title: string;
-  public artista: Artist; // artist
-  public identity: any;
-  public token: any;
-  public url: string;
-  public alertMessage: string = '';
-  public is_edit: boolean;
-  public filesToUpload: Array<File> = []; // Inicializa como arreglo vacío
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _userService: UserService,
-    private _artistService: ArtistService,
-    private _uploadService: UploadService
-  ) {
-    this.title = 'Editar artista';
-    this.identity = this._userService.getIdentity();
-    this.token = this._userService.getToken();
-    this.url = Global.url;
-    this.artista = new Artist('', '', '','');
-    this.is_edit = true;
-  }
+export class ArtistEditComponent implements OnInit
+{
+	public titulo:string;
+	public artist:Artist;
+	public identity;
+	public token;
+	public url:string;
+	public user;
+	public alertMessage;
+	public isEdit;
+	public filesToUpload:Array<File>;
 
-  ngOnInit(): void {
-    console.log('Artist-edit.component.ts initialized');
-    this.getArtist();
-  }
+	constructor(private _route:ActivatedRoute, private _router:Router, private _userService: UserService, private _artistService:ArtistService, private _uploadService:UploadService)
+	{
+		this.titulo = 'Editar artista';
+		this.identity = localStorage.getItem('identity');
+		this.token = localStorage.getItem('token');
+		this.url = GLOBAL.url;
+	    this.user = JSON.parse(this.identity);
+	    this.artist = new Artist('','','');
+	    this.isEdit = true;
+	}
 
-  getArtist(): void {
-    this._route.params.subscribe((params: Params) => {
-      let id = params['id'];
-      this._artistService.getArtist(this.token, id).subscribe(
-        response => {
-          if (!response.artist) {
-            this._router.navigate(['/']);
-          } else {
-            this.artista = response.artist;
-          }
-        },
-        error => {
-          console.error('Error fetching artist:', error);
-        }
-      );
-    });
-  }
+	ngOnInit()
+	{
+		console.log('Componente artist-detail.component.ts cargado');
+		//Llamar al método del API para obtener artista
+		this.getArtist();
+	}
 
-  onSubmit(): void {
-    console.log(this.artista);
-    this._route.params.subscribe((params: Params) => {
-      let id = params['id'];
+	onSubmit()
+	{
+		this._artistService.editArtist(this.token,this.getId(),this.artist).subscribe(
+			response => 
+			{			
 
-      this._artistService.editArtist(this.token, id, this.artista).subscribe(
-        response => {
-          console.log('Response del servidor:', response);
+				if(!response.artist)
+				{
+					this.alertMessage = 'Error al editar artista';
+				}
+				
+				else
+				{
+					//this.artist = response.artist;
+					//this._router.navigate(['/edit-artist'],response.artist._id);
+					this.alertMessage = 'Artista actualizado correctamente';
+					if(!this.filesToUpload)
+					{
+						this._router.navigate(['/artist-detail',this.getId()]);
+					}
+					else
+					{
+						//Subir la imagen del artista
+						this._uploadService.makeFileRequest(this.url + 'upload_image_artist/' + this.getId(), [], this.filesToUpload, this.token, 'image').then(
+							(result) => 
+							{
+								this._router.navigate(['/artist-edit',this.getId()]);
+							},
+							(error) =>
+							{
+								console.log(error);
+							}
+						);
+					}
+				}
 
-          if (!response.artist) {
-            this.alertMessage = 'Error en el servidor';
-          } else {
-            this.alertMessage = 'El artista se ha actualizado correctamente';
+			},
+			error =>
+			{
+				var errorMessage = <any>error;
+	            if(errorMessage != null)
+	            {
+	        	    //Parseo de respuesta
+	                var body = JSON.parse(error._body);
+	                this.alertMessage = body.message; //Si mando el error me imprime el error
+	                console.log("Error: " + error);
+	            }
+			}
+		);
+	}
 
-            // Subir el archivo de imagen
-            this._uploadService.makeFileRequest(
-              `${this.url}/Upload-images-Artist/${id}`,
-              [],
-              this.filesToUpload,
-              this.token,
-              'image'
-            ).then(
-              (result: any) => {
-                console.log(result);
-                // Actualiza la imagen del artista si es necesario
-              },
-              (error: any) => {
-                console.error(error);
-              }
-            );
+	getArtist()
+	{
+		this._route.params.forEach((params: Params) =>
+		{
+			let id = params['id'];
+			this._artistService.getArtist(this.token,id).subscribe(
+				response =>
+				{
+					if(!response.artist)
+					{
+						this._router.navigate(['/']);
+					}
+					else
+					{
+						this.artist = response.artist;
+					}
+				},
+				error =>
+				{
+					var errorMessage = <any>error;
+		            if(errorMessage != null)
+		            {
+		        	    //Parseo de respuesta
+		                var body = JSON.parse(error._body);
+		                this.alertMessage = body.message; //Si mando el error me imprime el error
+		                console.log("Error: " + error);
+		            }
+				}
+			);
+		});
+	}
 
-            // Navegar a otra página si es necesario
-            // this._router.navigate(['editar-artista', response.artist._id]);
-          }
-        },
-        error => {
-          const errorMessage = <any>error;
-          console.log('Error:', errorMessage);
-          if (errorMessage != null) {
-            try {
-              const body = JSON.parse(error.error);
-              this.alertMessage = body.message;
-            } catch (e) {
-              this.alertMessage = 'Error desconocido al actualizar';
-            }
-            console.log(error);
-          }
-        }
-      );
-    });
-  }
+	getId()
+	{
+		let id;
+		this._route.params.forEach((params: Params) =>
+		{
+			id = params['id'];
+		});
+		return id;
+	}
 
-  fileChangeEvent(fileInput: any): void {
-    this.filesToUpload = <Array<File>>fileInput.target.files;
-    console.log(this.filesToUpload); // Para verificar que los archivos se están cargando correctamente
-  }
+	fileChangeEvent(fileInput:any)
+	{
+		this.filesToUpload = <Array<File>>fileInput.target.files;
+		console.log("Ficheros seleccionados:");
+		console.log(this.filesToUpload);
+	}
 }

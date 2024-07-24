@@ -29,7 +29,7 @@ function getArtist(req, res) {
 async function getArtists(req, res) {
     try {
         var page = req.params.page ? parseInt(req.params.page) : 1;
-        var itemsPerPage = 4;
+        var itemsPerPage = 8;
 
         const artists = await Artist.find()
             .sort('name')

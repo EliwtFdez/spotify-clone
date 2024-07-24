@@ -1,7 +1,10 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+//Configuración del router de la aplicación
+//Funcionalidad del router
+import {ModuleWithProviders} from '@angular/core';
+import {Routes,RouterModule} from '@angular/router';
 
-import { UserEditComponet } from './components/user-edit.component';  // Importar UserEditComponent correctamente
+//Componentes que tienen que ver con el usuario
+import {UserEditComponent} from './components/user-edit.component';
 import { ArtistListComponent } from './components/artist-list.component';
 import { HomeComponent } from './components/home.component';
 import { ArtistAddComponent } from './components/artist-add.component';
@@ -9,25 +12,29 @@ import { ArtistEditComponent } from './components/artist-edit.component';
 import { ArtistDetailComponent } from './components/artist-detail.component';
 import { AlbumAddComponent } from './components/album-add.component';
 import { AlbumEditComponent } from './components/album-edit.component';
+import { AlbumDetailComponent } from './components/album-detail.component';
+import { SongAddComponent } from './components/song-add.component';
+import { SongEditComponent } from './components/song-edit.component';
 
+const appRoutes:Routes = 
+[
+	//Ruta del home
+	{path: '',component:HomeComponent},
+	{path: 'miPerfil',component:UserEditComponent},
+	{path: 'artists/:page',component:ArtistListComponent},
+	{path: 'artist-add',component:ArtistAddComponent},
+	{path: 'artist-edit/:id',component:ArtistEditComponent},
+	{path: 'artist-detail/:id',component:ArtistDetailComponent},
+	{path: 'album-add/:id',component:AlbumAddComponent},
+	{path: 'album-edit/:id',component:AlbumEditComponent},
+	{path: 'album-detail/:id',component:AlbumDetailComponent},
+	{path: 'song-add/:id',component:SongAddComponent}, //Id del album
+	{path: 'song-edit/:id',component:SongEditComponent},
+	//Ruta que no existe
+	{path: '**',component:HomeComponent}
 
-const appRoutes: Routes = [
-  { path: '', component: HomeComponent  },
-  { path: 'artist/:page', component: ArtistListComponent },
-  { path: 'CrearArtista', component: ArtistAddComponent },
-  { path: 'misDatos', component: UserEditComponet },
-  { path: 'Artista/:id', component: ArtistDetailComponent },
-  { path: 'editarArtista/:id', component: ArtistEditComponent },
-  { path: 'CrearAlbum/:artist', component: AlbumAddComponent },
-  { path: 'EditAlbum/:id', component: AlbumEditComponent },
-
-  { path: '**', component: HomeComponent }
 ];
 
-export const appRoutingProviders: any[] = [];
-export const routing: ModuleWithProviders<AppRoutingModule> = RouterModule.forRoot(appRoutes);
-
-export class AppRoutingModule { }
-
-
-
+export const appRoutingProviders:any[] = [];
+//Routing
+export const routing:ModuleWithProviders = RouterModule.forRoot(appRoutes);

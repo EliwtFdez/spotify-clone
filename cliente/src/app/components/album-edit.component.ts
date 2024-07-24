@@ -1,116 +1,149 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Params, Router } from "@angular/router";
-import { Global } from "../service/service.global";
-import { UserService } from "../service/service.component";
-import { ArtistService } from "../service/artist.service";
-import { AlbumService } from "../service/album.service";
-import { UploadService } from "../service/upload.service";
-import { Album } from "../models/album";
+import {Component,OnInit} from '@angular/core';
+//Elementos del router para poder hacer redirecciones
+//Recoger parámetros de la URL
+import {Router,ActivatedRoute, Params} from '@angular/router';
+import {UserService} from '../services/user.service';
+import {AlbumService} from '../services/album.service';
+import {UploadService} from '../services/upload.service';
+import {GLOBAL} from '../services/global';
+import {Album} from '../models/album';
 
-@Component({
-  selector: 'album-edit',
-  templateUrl: '../view/album-add.html',
-  providers: [UserService, UploadService, AlbumService]
+@Component(
+{
+	selector:'album-edit',
+	templateUrl:'../views/album-add.html',
+	providers:[UserService,UploadService,AlbumService]
 })
-export class AlbumEditComponent implements OnInit {
-  public titulo: string;
-  
-  public album: Album;
-  public identity: any;
-  public token: any;
-  public url: string;
-  public alertMessage: string = '';
-  public is_edit: boolean;
-  public filesToUpload: Array<File> = []; // Inicializa como arreglo vacío
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _userService: UserService,
-    private _artistService: ArtistService,
-    private _albumService: AlbumService,
-    private _uploadService: UploadService
-  ) {
-    this.titulo = 'Editar Album';
-    this.identity = this._userService.getIdentity();
-    this.token = this._userService.getToken();
-    this.url = Global.url;
-    this.album = new Album('', '', 2024, '', '');
-    this.is_edit = true;
-  }
+export class AlbumEditComponent implements OnInit
+{
+	public title:string;
+	public album:Album;
+	public identity;
+	public token;
+	public url:string;
+	public user;
+	public alertMessage;
+	public isEdit;
+	public filesToUpload:Array<File>;
 
-  ngOnInit(): void {
-    console.log('album-edit.component Cargado');
-    this.getAlbum();
-  }
+	constructor(private _route:ActivatedRoute, private _router:Router, private _userService: UserService, private _uploadService:UploadService, private _albumService:AlbumService)
+	{
+		this.title = 'Editar álbum';
+		this.identity = localStorage.getItem('identity');
+		this.token = localStorage.getItem('token');
+		this.url = GLOBAL.url;
+	    this.user = JSON.parse(this.identity);
+	    //this.album = new Album('','',2017,'','');
+	    this.isEdit = true;
+	}
 
-  getAlbum() {
-    this._route.params.forEach((params: Params) => {
-      let id = params['id'];
-      this._albumService.getAlbum(this.token, id).subscribe(
-        response => {
-          console.log('Response server GETALBUM:', response);
-          if (!response.album) {
-            this._router.navigate(['/']);
-          } else {
-            this.album = response.album;
-          }
-        },
-        error => {
-          console.error(error);
-          this.alertMessage = 'Error desconocido al obtener el álbum';
-        }
-      );
-    });
-  }
+	ngOnInit()
+	{
+		console.log('Componente album-edit.component.ts cargado');
+		//Llamar al método del API para obtener álbum
+		this.getAlbum();
+	}
 
-  onSubmit() {
-    console.log(this.album);
-    this._route.params.forEach((params: Params) => {
-      let id = params['id'];
-      this._albumService.editAlbum(this.token, id, this.album).subscribe(
-        response => {
-          console.log('Response from server:', response);
-          if (!response.album) {
-            this.alertMessage = 'Error en el servidor';
-          } else {
-            this.alertMessage = 'El album se ha actualizado correctamente';
+	onSubmit()
+	{
+		this._route.params.forEach((params:Params)=>
+		{
+			let id = params['id'];
+			this._albumService.editAlbum(id,this.album).subscribe(
+				response => 
+				{			
 
-            if (!this.filesToUpload) {
-              console.log('eseperar'+response.album.artist);
-              
-            }          
+					if(!response.album)
+					{
+						this.alertMessage = 'Error al editar álbum';
+					}
+					
+					else
+					{
+						this.album = response.album;
+						//this._router.navigate(['/edit-artist'],response.artist._id);
+						this.alertMessage = 'Álbum actualizado correctamente';
+						if(this.filesToUpload)
+						{
+							//Subir la imagen del álbum
+							this._uploadService.makeFileRequest(this.url + 'upload_image_album/' + this.getId(), [], this.filesToUpload, this.token, 'image').then(
+								(result) => 
+								{
+									this._router.navigate(['/album-edit',this.getId()]);
+								},
+								(error) =>
+								{
+									console.log(error);
+								}
+							);
+						}
+					}
 
+				},
+				error =>
+				{
+					var errorMessage = <any>error;
+		            if(errorMessage != null)
+		            {
+		        	    //Parseo de respuesta
+		                var body = JSON.parse(error._body);
+		                this.alertMessage = body.message; //Si mando el error me imprime el error
+		                console.log("Error: " + error);
+		            }
+				}
+			);
+		});
+	}
 
-            // Subir el archivo de imagen
-            if (this.filesToUpload.length > 0) {
-              this._uploadService.makeFileRequest(`${this.url}/Upload-Image-Album/${id}`, [], this.filesToUpload, this.token, 'image')
-                .then(
-                  (result: any) => {
-                    console.log(result);
-                    
-                    
-                    this._router.navigate(['/Artista', response.album.artist]);
-                  },
-                  (error: any) => {
+	getAlbum()
+	{
+		this._route.params.forEach((params:Params)=>
+		{
+			let id = params['id'];
+			this._albumService.getAlbum(id).subscribe(
+				response =>
+				{
+					if(!response.album)
+					{
+						//this.alertMessage = 'Error al obtener álbum';
+						this._router.navigate(['/']);
+					}
+					else
+					{
+						this.album = response.album;
+						console.log(this.album);
+					}
+				},
+				error =>
+				{
+					var errorMessage = <any>error;
+		            if(errorMessage != null)
+		            {
+		        	    //Parseo de respuesta
+		                var body = JSON.parse(error._body);
+		                this.alertMessage = body.message; //Si mando el error me imprime el error
+		                console.log("Error: " + error);
+		            }
+				}
+			);
+		});
+	}
 
-                    console.error(error);
-                  }
-                );
-            } else {
-              this._router.navigate(['/Artista', response.album.artist]);
-            }
-          }
-        },
-        error => {
-          console.error('Error:', error);
-          this.alertMessage = 'Error desconocido al actualizar el álbum';
-        }
-      );
-    });
-  }
+	getId()
+	{
+		let id;
+		this._route.params.forEach((params: Params) =>
+		{
+			id = params['id'];
+		});
+		return id;
+	}
 
-  fileChangeEvent(fileInput: any): void {
-    this.filesToUpload = <Array<File>>fileInput.target.files;
-  }
+	fileChangeEvent(fileInput:any)
+	{
+		this.filesToUpload = <Array<File>>fileInput.target.files;
+		console.log("Ficheros seleccionados:");
+		console.log(this.filesToUpload);
+	}
 }

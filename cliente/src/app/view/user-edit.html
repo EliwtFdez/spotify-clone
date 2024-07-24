@@ -1,34 +1,118 @@
-<!--Actualizar datos-->
-<div class="col-lg-6">
-  <h1>{{titulo}}</h1>
-  <div *ngIf="alertMessage">
-    <div class="alert alert-info">{{alertMessage}}</div>
-  </div>
-  <form #userUpdateForm="ngForm" (ngSubmit)="onSubmit()" class="col-md-10">
-    <p>
-      <label for="name">Nombre: </label>
-      <input type="text" #name="ngModel" name="name" [(ngModel)]="user.name" class="form-control" required/>
-      <span *ngIf="!name.valid && name.touched">El nombre es obligatorio</span>
-    </p>
-    <p>
-      <label for="surname">Apellidos: </label>
-      <input type="text" #surname="ngModel" name="surname" [(ngModel)]="user.surname" class="form-control" required/>
-      <span *ngIf="!surname.valid && surname.touched">Los apellidos son obligatorios</span>
-    </p>
-    <p>
-      <label for="registerEmail">Email: </label>
-      <input type="email" #registerEmail="ngModel" name="registerEmail" [(ngModel)]="user.email" class="form-control" required/>
-      <span *ngIf="!registerEmail.valid && registerEmail.touched">El Email es obligatorio</span>
-    </p>
+<div class="col-lg-12 text-center" *ngIf="identity">
+	<h1 class>
+    	{{titulo}}
+    </h1>
 
-    <div class="image_for_edit" *ngIf="user.image && user.image != null">
-      <img src="{{url +'/Get-image-file/'+user.image}}"  width="50px" alt=""/>
+    <!-- Formulario-->
+    <div class="col-sm-6 col-md-6 col-lg-6">
+
+      <div *ngIf="alertMessage">
+       
+        <div class="alert alert-info">
+      
+          {{alertMessage}}
+      
+        </div>
+      
+      </div>
+      
+      <form #userUpdateForm="ngForm" (ngSubmit)="onSubmitUpdating()" class="form-horizontal">
+      <fieldset>
+      
+        <div class="form-group">
+          
+          <label for="textinput" class="control-label col-sm-2">Nombre</label>
+          
+          <div class="col-sm-10">
+          
+            <input type="text" #name="ngModel" [(ngModel)]="user.name" name="uu-nombre" class="form-control" id="uu-nombre" placeholder="Nombre">
+          
+            <span *ngIf="(!name.valid && name.touched) || !name.empty && name.untouched">
+              El nombre es obligatorio.
+            </span>
+          
+          </div>
+        
+        </div>
+        
+        <div class="form-group">
+        
+          <label for="textinput" class="control-label col-sm-2">Apellidos</label>
+        
+          <div class="col-sm-10">
+        
+            <input type="text" #surname="ngModel" [(ngModel)]="user.surname" name="uu-apellidos" class="form-control" id="uu-apellidos" placeholder="Apellidos">
+        
+            <span *ngIf="(!surname.valid && email.touched) || !surname.empty && surname.untouched">
+              Los apellidos son obligatorios.
+            </span>
+        
+          </div>
+        
+        </div>
+        
+        <div class="form-group">
+      
+          <!--<label for="textinput" class="control-label col-sm-2">Usuario</label>
+
+          <div class="col-sm-10">
+
+
+            <input type="email" #email="ngModel" name="uu-usuario" [(ngModel)]="user.email" class="form-control" id="uu-usuario" placeholder="Correo electrónico" required="true">
+          
+            <span *ngIf="(!email.valid && email.touched) || !email.empty && email.untouched">
+              El correo electrónico es obligatorio.
+            </span>
+          
+          </div>-->
+
+        </div>
+        
+        <div class="form-group">
+          
+          <!--<label for="textinput" class="control-label col-sm-2">Contraseña</label>
+      
+          <div class="col-sm-10">
+          
+            <input type="password" #password="ngModel" name="uu-password" [(ngModel)]="user.password" class="form-control" id="uu-password" placeholder="Contraseña">
+
+            <span *ngIf="(!password.valid && password.touched) || !password.empty && password.untouched">
+              La contraseña es obligatoria.
+            </span>
+          
+          </div>-->
+
+        </div>
+
+        <div class="form-group" *ngIf="user.image && user.image != 'null'">
+          
+          <label for="textinput" class="control-label col-sm-2">Imagen</label>
+
+          <div class="col-sm-10">
+          
+          <input type="file" (change)="fileChangeEvent($event)"  name="uu-avatar" class="form-control" id="uu-avatar" placeholder="Imagen de perfil">
+
+          <br/>
+          
+          <img src="{{url + 'get_image_user/' + user.image}}" class="avatar">
+      
+          </div>
+
+        </div>
+      
+      <div class="form-group">
+      
+        <div class="text-right col-sm-12">
+      
+          <button type="submit" id="uu-actualizar" name="uu-actualizar" class="btn btn-verde" aria-label="Registrarse">Actualizar mis datos</button>
+      
+        </div>
+      
+      </div>
+      
+      </fieldset>      
+      </form>
+
     </div>
-    <p>
-      <label for="">Sube tu foto: </label>
-      <input type="file" placeholder="Subir image..." (change)="fileChangeEvent($event)"/>
-    </p>
 
-    <input type="submit" value="Actualizar Datos" class="btn btn-primary"/>
-  </form>
 </div>

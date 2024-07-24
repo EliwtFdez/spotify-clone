@@ -1,25 +1,26 @@
-import { Component,OnInit } from "@angular/core";
-import { ActivatedRoute, Router , Params } from "@angular/router";
-import { Artist } from "../models/artist";
+import {Component,OnInit} from '@angular/core';
+//Elementos del router para poder hacer redirecciones
+//Recoger parámetros de la URL
+import {Router,ActivatedRoute, Params} from '@angular/router';
 
-
-@Component({
-    selector: 'artist-list',
-    templateUrl: '../view/home.html',
+@Component(
+{
+	selector:'home',
+	templateUrl:'../views/home.html',
 })
 
-export class HomeComponent implements OnInit {
-    public title:any;
+export class HomeComponent implements OnInit
+{
+	public titulo: string;
 
-    constructor(private _route: ActivatedRoute, private _router: Router, ) {
-      this.title = 'Artistas';
+	constructor(private _route:ActivatedRoute, private _router:Router)
+	{
+		this.titulo = 'Musify';
+	}
 
-    }
-
-    ngOnInit(): void {
-        console.log('Home.component.ts cargado');
-
-    }
-
-
+	ngOnInit()
+	{
+		console.log('Componente home.component.ts cargado');
+		//Conseguir el listado de artistas
+	}
 }

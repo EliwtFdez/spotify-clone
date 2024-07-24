@@ -1,39 +1,60 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Global } from './service.global';
+import { Http, Response, Headers,RequestOptions } from '@angular/http';
+//Mapeo de objetos
+import 'rxjs/add/operator/map';
+//Recoger respuestas de peticiones ajax
+import { Observable } from 'rxjs/Observable';
+import { GLOBAL } from './global';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class UploadService {
-  public url: string;
+@Injectable()
+export class  UploadService
+{
+	public url: string;
 
-  constructor(private http: HttpClient) {
-    this.url = Global.url;
-  }
+	//Inyectar http
+	constructor(private _http:Http) 
+	{
+		this.url =  GLOBAL.url;
+	}
 
-  makeFileRequest(url: string, params: Array<string>, files: Array<File>, token: string, name: string) {
-    return new Promise((resolve, reject) => {
-      const formData: any = new FormData();
-      const xhr = new XMLHttpRequest();
+	makeFileRequest(url: string, params: Array<string>, files: Array<File>, token:string, name:string)
+	{
+		//Lanzar el código de subida
+		return new Promise(function(resolve, reject)
+		{
+			//Formulario
+			var formData:any = new FormData();
+			//Peticiones AJAX
+			var xhr = new XMLHttpRequest();
 
-      for (let i = 0; i < files.length; i++) {
-        formData.append(name, files[i], files[i].name);
-      }
+			//Recorrer los ficheros del array
+			for(var i = 0; i < files.length; i++)
+			{
+				formData.append(name,files[i],files[i].name);
+			}
 
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            resolve(JSON.parse(xhr.response));
-          } else {
-            reject(xhr.response);
-          }
-        }
-      };
+			//Comprobar si la petición está lista para lanzarse
+			xhr.onreadystatechange = function()
+			{
+				//Petición 200
+				if(xhr.readyState == 4)
+				{
+					if(xhr.status == 200)
+					{
+						//Resolvemos
+						resolve(JSON.parse(xhr.response));
+					}
+					else
+					{
+						reject(xhr.response);
+					}
+				}
+			}
 
-      xhr.open('POST', url, true);
-      xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-      xhr.send(formData);
-    });
-  }
+			//Armar la petición POST
+			xhr.open('POST',url,true);
+			xhr.setRequestHeader('Authorization',token);
+			xhr.send(formData);
+		});
+	}
 }

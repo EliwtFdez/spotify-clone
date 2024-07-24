@@ -1,88 +1,75 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { UserService } from "../service/service.component";
-import { Global } from "../service/service.global";
-import { Artist } from "../models/artist";
-import { ArtistService } from "../service/artist.service";
-import { CommonModule } from "@angular/common";
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { Album } from "../models/album";
+import {Component,OnInit} from '@angular/core';
+//Elementos del router para poder hacer redirecciones
+//Recoger parámetros de la URL
+import {Router,ActivatedRoute, Params} from '@angular/router';
+import {UserService} from '../services/user.service';
+import {ArtistService} from '../services/artist.service';
+import {GLOBAL} from '../services/global';
+import {Artist} from '../models/artist';
 
-@Component({
-  selector: 'artist-add',
-  templateUrl: '../view/artist-add.html',
-  
-
-  providers: [UserService, ArtistService,CommonModule]
+@Component(
+{
+	selector:'artist-add',
+	templateUrl:'../views/artist-add.html',
+	providers:[UserService,ArtistService]
 })
-export class ArtistAddComponent implements OnInit {
-  public title: string;
-  public artista: Artist; // artist
-  public identity: any;
-  public token: any;
-  public url: string;
-  public alertMessage: string = '';
-  public album: Album;
-  public is_edit: boolean = false; 
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _userService: UserService,
-    private _artistService: ArtistService
-  ) {
-    this.title = 'Crear nuevo artista';
-    this.identity = this._userService.getIdentity();
-    this.token = this._userService.getToken();
-    this.url = Global.url;
-    this.artista = new Artist('', '', '','');
-    this.album = new Album('', '', 2024, '', '');
+export class ArtistAddComponent implements OnInit
+{
+	public titulo:string;
+	public artist:Artist;
+	public identity;
+	public token;
+	public url:string;
+	public user;
+	public alertMessage;
 
+	constructor(private _route:ActivatedRoute, private _router:Router, private _userService: UserService, private _artistService:ArtistService)
+	{
+		this.titulo = 'Añadir nuevo artista';
+		this.identity = localStorage.getItem('identity');
+		this.token = localStorage.getItem('token');
+		this.url = GLOBAL.url;
+	    this.user = JSON.parse(this.identity);
+	    this.artist = new Artist('','','');
+	}
 
-  }
+	ngOnInit()
+	{
+		console.log('Componente artist-add.component.ts cargado');
+		//Conseguir el listado de artistas
+	}
 
-  ngOnInit(): void {
-    console.log('Artist-add.component.ts initialized');
-  }
+	onSubmit()
+	{
+		this._artistService.addArtist(this.token,this.artist).subscribe(
+			response => 
+			{			
 
-  fileChangeEvent(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.artista.image = file;
-      // Lógica adicional para manejar el archivo si es necesario
-    }
-  }
+				if(!response.artist)
+				{
+					this.alertMessage = 'Error al crear artista';
+				}
+				
+				else
+				{
+					this.artist = response.artist;
+					this.alertMessage = 'Artista guardado exitosamente';
+					this._router.navigate(['/artist-edit',response.artist._id]);
+				}
 
-  onSubmit(): void {
-    console.log(this.artista);
-
-    this._artistService.addArtist(this.token, this.artista).subscribe(
-      response => {
-        console.log('Response from server:', response);
-
-        if (!response.Artist) {
-          this.alertMessage = 'Error en el servidor';
-        } else {
-          this.alertMessage = 'El artista se ha creado correctamente';
-          this.artista = response.Artist;
-          // Navigate to edit page if needed
-           this._router.navigate(['editarArtista', response.Artist._id]);
-        }
-      },
-      error => {
-        const errorMessage = <any>error;
-        if (errorMessage != null) {
-          try {
-            const body = JSON.parse(error.error);
-            this.alertMessage = body.message;
-          } catch (e) {
-            this.alertMessage = 'Error desconocido al actualizar';
-          }
-
-          console.log(error);
-        }
-      }
-    );
-  }
+			},
+			error =>
+			{
+				var errorMessage = <any>error;
+	            if(errorMessage != null)
+	            {
+	        	    //Parseo de respuesta
+	                var body = JSON.parse(error._body);
+	                this.alertMessage = body.message; //Si mando el error me imprime el error
+	                console.log("Error: " + error);
+	            }
+			}
+		);
+	}
 }

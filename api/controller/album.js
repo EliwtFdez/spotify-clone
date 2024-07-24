@@ -29,7 +29,7 @@ async function getAlbum(req, res) {
 async function getAlbums(req, res) {
     var artistId = req.params.artist;
     var page = req.query.page ? parseInt(req.query.page) : 1;
-    var itemsPerPage = 4;
+    var itemsPerPage = 8;
 
     try {
         let find;

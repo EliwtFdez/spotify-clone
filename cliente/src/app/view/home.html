@@ -1,8 +1,18 @@
-<div class="col-lg-8 col-lg-offset-3">
-  <div class="jumbotron">
-    <h1 class="display-4">Bienvenido a MiniSpotify!</h1>
-    <p >Enpieza a escuchar musica y descubre nuevos hits.</p>
+<div class="jumbotron home">
+	
+	<h1>
+    	
+    	¡Bienvenido a {{titulo}}!
 
-    <a class="btn btn-primary btn-lg" [routerLink]="['/artist',1]" role="button">Artistas</a>
-  </div>
+    </h1>
+
+    <p>
+    	Comienza a esuchar música de tus artistas favoritos.
+    	<a [routerLink]="['/artists',1]">
+    		
+    		Ver más...
+
+   		</a>	
+    </p>
+
 </div>
